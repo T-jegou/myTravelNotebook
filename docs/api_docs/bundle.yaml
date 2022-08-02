@@ -1,0 +1,93 @@
+swagger: '2.0'
+info:
+  description: >
+    MyTravelNotebook is an application aim to provide a simple way to create a
+    booktrip.
+  title: MyTravelNotebook
+  version: 1.0.0
+x-tagGroups:
+  - name: MyTravelNotebook management
+    tags:
+      - travel
+consumes:
+  - application/json
+produces:
+  - application/json
+schemes:
+  - http
+basePath: /api/v1
+paths:
+  /travels:
+    get:
+      tags:
+        - travel
+      operationId: listTravels
+      responses:
+        '200':
+          description: list all the travels
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/travels'
+        default:
+          description: generic error response
+          schema:
+            $ref: '#/definitions/error'
+  /travel/{travel_id}:
+    get:
+      tags:
+        - travel
+      operationId: getTravelById
+      parameters:
+        - in: path
+          name: travel_id
+          description: travel unique id
+          required: true
+          type: string
+          minimum: 1
+      responses:
+        '200':
+          description: returns the travel informations
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/travel'
+        default:
+          description: generic error response
+          schema:
+            $ref: '#/definitions/error'
+definitions:
+  travels:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        description: unique name of the travel
+        type: string
+        minLength: 1
+  travel:
+    type: object
+    required:
+      - name
+    properties:
+      travel_id:
+        description: unique id of the travel
+        type: string
+        minLength: 1
+      name:
+        description: unique name of the travel
+        type: string
+        minLength: 1
+      resume:
+        description: short resume of the travel
+        type: string
+        minLength: 1
+  error:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
+        minLength: 1

@@ -1,0 +1,15 @@
+get:
+  tags:
+    - travel
+  operationId: listTravels
+  responses:
+    200:
+      description: list all the travels
+      schema:
+        type: array
+        items:
+          $ref: "#/definitions/travels"
+    default:
+      description: generic error response
+      schema:
+        $ref: "#/definitions/error"

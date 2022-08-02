@@ -1,0 +1,22 @@
+get:
+  tags:
+    - travel
+  operationId: getTravelById
+  parameters:
+    - in: path
+      name: travel_id
+      description: travel unique id
+      required: true
+      type: string
+      minimum: 1
+  responses:
+    200:
+      description: returns the travel informations
+      schema:
+        type: array
+        items:
+          $ref: "#/definitions/travel"
+    default:
+      description: generic error response
+      schema:
+        $ref: "#/definitions/error"
