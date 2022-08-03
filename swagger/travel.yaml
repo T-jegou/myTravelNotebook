@@ -14,22 +14,19 @@ get:
         format: int64
   responses:
     200:
-        description: returns the travel information
-        schema:
-          type: array
-          items:
-            $ref: "#/definitions/travel"
-      default:
-        description: generic error response
-        schema:
-          $ref: "#/definitions/error"
-
-
+      description: returns the travel information
+      schema:
+        type: array
+        items:
+          $ref: "#/definitions/travel"
+    404:
+      description: Travel not found
+      
 delete:
   tags:
     - travel
-  summary: Deletes a travel
-  description: delete a travel
+  summary: Delete a travel
+  description: delete a travel by using his unique ID
   operationId: deleteTravelById
   parameters:
     - name: travelId
@@ -40,6 +37,36 @@ delete:
         type: integer
         format: int64
   responses:
+    204:
+      description: The resource was deleted successfully.
+    404:
+      description: Travel not found
     400:
-      description: Invalid travel value
+      description: Invalid travel value, bad request
 
+put:
+  tags:
+    - travel
+  summary: Update an exisiting travel
+  description: Update a travel by using his unique ID
+  operationId: updateTravelById
+  parameters:
+    - name: travelId
+      in: path
+      description: travel id to delete
+      required: true
+      schema:
+        type: integer
+        format: int64
+  requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: '#/definitions/travel'
+  responses:
+    204:
+      description: The resource was updtated successfully.
+    404:
+      description: Travel not found
+    400:
+      description: Invalid travel value, bad request
