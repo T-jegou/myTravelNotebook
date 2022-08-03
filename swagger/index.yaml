@@ -17,9 +17,9 @@ schemes:
 - http
 basePath: "/api/v1"
 paths:
-  /travels:
+  /travel:
     $ref: ./travels.yaml
-  /travel/{travel_id}:
+  /travel/{travelId}:
     $ref: ./travel.yaml
 
 definitions:

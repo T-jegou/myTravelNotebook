@@ -11,7 +11,7 @@ require (
 	github.com/go-openapi/swag v0.21.1
 	github.com/go-openapi/validate v0.22.0
 	github.com/jessevdk/go-flags v1.5.0
-	golang.org/x/net v0.0.0-20220728211354-c7608f3a8462
+	golang.org/x/net v0.0.0-20220802222814-0bcc04d9c69b
 )
 
 require (
@@ -24,7 +24,7 @@ require (
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
-	go.mongodb.org/mongo-driver v1.10.0 // indirect
+	go.mongodb.org/mongo-driver v1.10.1 // indirect
 	golang.org/x/sys v0.0.0-20220731174439-a90be440212d // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

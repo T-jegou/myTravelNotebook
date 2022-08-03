@@ -1,22 +1,45 @@
 get:
   tags:
     - travel
+  summary: Find travel by ID
+  description: Returns a single travel
   operationId: getTravelById
   parameters:
-    - in: path
-      name: travel_id
-      description: travel unique id
+    - name: travelId
+      in: path
+      description: ID of travel to return
       required: true
-      type: string
-      minimum: 1
+      schema:
+        type: integer
+        format: int64
   responses:
     200:
-      description: returns the travel informations
+        description: returns the travel information
+        schema:
+          type: array
+          items:
+            $ref: "#/definitions/travel"
+      default:
+        description: generic error response
+        schema:
+          $ref: "#/definitions/error"
+
+
+delete:
+  tags:
+    - travel
+  summary: Deletes a travel
+  description: delete a travel
+  operationId: deleteTravelById
+  parameters:
+    - name: travelId
+      in: path
+      description: travel id to delete
+      required: true
       schema:
-        type: array
-        items:
-          $ref: "#/definitions/travel"
-    default:
-      description: generic error response
-      schema:
-        $ref: "#/definitions/error"
+        type: integer
+        format: int64
+  responses:
+    400:
+      description: Invalid travel value
+
