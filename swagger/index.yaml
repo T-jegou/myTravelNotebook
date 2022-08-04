@@ -19,48 +19,32 @@ basePath: "/api/v1"
 paths:
   /travel:
     $ref: ./travels.yaml
-  /travel/{travelId}:
+  /travel/{id}:
     $ref: ./travel.yaml
 
+
 definitions:
-
-  # Travel
-  travels:
+  Travel:
     type: object
-    required:
-      - name
     properties:
-      name:
-        description: unique name of the travel
+      id:
+        type: integer
+        format: int64
+        example: 10
+      tripName:
         type: string
-        minLength: 1
+        description: Name of your trip
+        example: 10 days in Poland 
+      creationDate:
+        type: string
+        format: date-time
+      country:
+        type: string
+        description: Country of the travel
+        example: Lithuania 
+      descriptionTravel:
+        type: string
+        description: Notes and resume of your trip !
+        example: I visit Cracovie, Katowice and Warsaw, but to be honest my favorite city was Gdansk
 
-  # Travel
-  travel:
-    type: object
-    required:
-      - name
-    properties:
-      travel_id:
-        description: unique id of the travel
-        type: string
-        minLength: 1
-      name:
-        description: unique name of the travel
-        type: string
-        minLength: 1
-      resume:
-        description: short resume of the travel
-        type: string
-        minLength: 1
-       
-  # Default Error
-  error:
-    type: object
-    required:
-      - message
-    properties:
-      message:
-        type: string
-        minLength: 1
-
+ 

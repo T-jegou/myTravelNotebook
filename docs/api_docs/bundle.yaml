@@ -17,77 +17,143 @@ schemes:
   - http
 basePath: /api/v1
 paths:
-  /travels:
+  /travel:
     get:
       tags:
         - travel
-      operationId: listTravels
+      operationId: getTravels
       responses:
         '200':
-          description: list all the travels
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/travels'
-        default:
-          description: generic error response
-          schema:
-            $ref: '#/definitions/error'
-  /travel/{travel_id}:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/definitions/Travel'
+    post:
+      tags:
+        - travel
+      summary: Create new travel
+      description: Create a new travel using form
+      operationId: createTravel
+      requestBody:
+        description: Created travel object
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Travel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/definitions/Travel'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/Travel'
+  /travel/{id}:
     get:
       tags:
         - travel
+      summary: Find travel by ID
+      description: Returns a single travel
       operationId: getTravelById
       parameters:
-        - in: path
-          name: travel_id
-          description: travel unique id
+        - name: id
+          in: path
+          description: ID of travel to return
           required: true
-          type: string
-          minimum: 1
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
-          description: returns the travel informations
+          description: returns the travel information
           schema:
             type: array
             items:
-              $ref: '#/definitions/travel'
-        default:
-          description: generic error response
+              $ref: '#/definitions/Travel'
+        '404':
+          description: Travel not found
+    delete:
+      tags:
+        - travel
+      summary: Delete a travel
+      description: delete a travel by using his unique ID
+      operationId: deleteTravelById
+      parameters:
+        - name: id
+          in: path
+          description: travel id to delete
+          required: true
           schema:
-            $ref: '#/definitions/error'
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: The resource was deleted successfully.
+        '400':
+          description: Invalid travel value, bad request
+        '404':
+          description: Travel not found
+    put:
+      tags:
+        - travel
+      summary: Update an exisiting travel
+      description: Update a travel by using his unique ID
+      operationId: updateTravelById
+      parameters:
+        - name: id
+          in: path
+          description: travel id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Created travel object
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/Travel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/definitions/Travel'
+      responses:
+        '204':
+          description: The resource was updtated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/Travel'
+        '400':
+          description: Invalid travel value, bad request
+        '404':
+          description: Travel not found
 definitions:
-  travels:
+  Travel:
     type: object
-    required:
-      - name
     properties:
-      name:
-        description: unique name of the travel
+      id:
+        type: integer
+        format: int64
+        example: 10
+      tripName:
         type: string
-        minLength: 1
-  travel:
-    type: object
-    required:
-      - name
-    properties:
-      travel_id:
-        description: unique id of the travel
+        description: Name of your trip
+        example: 10 days in Poland
+      creationDate:
         type: string
-        minLength: 1
-      name:
-        description: unique name of the travel
+        format: date-time
+      country:
         type: string
-        minLength: 1
-      resume:
-        description: short resume of the travel
+        description: Country of the travel
+        example: Lithuania
+      descriptionTravel:
         type: string
-        minLength: 1
-  error:
-    type: object
-    required:
-      - message
-    properties:
-      message:
-        type: string
-        minLength: 1
+        description: Notes and resume of your trip !
+        example: >-
+          I visit Cracovie, Katowice and Warsaw, but to be honest my favorite
+          city was Gdansk

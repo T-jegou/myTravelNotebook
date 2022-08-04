@@ -5,7 +5,7 @@ get:
   description: Returns a single travel
   operationId: getTravelById
   parameters:
-    - name: travelId
+    - name: id
       in: path
       description: ID of travel to return
       required: true
@@ -18,7 +18,7 @@ get:
       schema:
         type: array
         items:
-          $ref: "#/definitions/travel"
+          $ref: '#/definitions/Travel'   
     404:
       description: Travel not found
       
@@ -29,7 +29,7 @@ delete:
   description: delete a travel by using his unique ID
   operationId: deleteTravelById
   parameters:
-    - name: travelId
+    - name: id
       in: path
       description: travel id to delete
       required: true
@@ -51,7 +51,7 @@ put:
   description: Update a travel by using his unique ID
   operationId: updateTravelById
   parameters:
-    - name: travelId
+    - name: id
       in: path
       description: travel id to delete
       required: true
@@ -59,13 +59,21 @@ put:
         type: integer
         format: int64
   requestBody:
-  content:
-    application/json:
-      schema:
-        $ref: '#/definitions/travel'
+    description: Created travel object
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/Travel'   
+      application/x-www-form-urlencoded:
+        schema:
+          $ref: '#/definitions/Travel'   
   responses:
     204:
       description: The resource was updtated successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/definitions/Travel'   
     404:
       description: Travel not found
     400:
