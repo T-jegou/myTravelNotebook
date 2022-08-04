@@ -26,12 +26,14 @@ paths:
 definitions:
   Travel:
     type: object
+    required:
+      - id
     properties:
       id:
         type: integer
         format: int64
         example: 10
-      tripName:
+      nameTravel:
         type: string
         description: Name of your trip
         example: 10 days in Poland 
@@ -47,4 +49,4 @@ definitions:
         description: Notes and resume of your trip !
         example: I visit Cracovie, Katowice and Warsaw, but to be honest my favorite city was Gdansk
 
- 
+

@@ -1,36 +1,33 @@
 get:
-  tags:
-    - travel
-  operationId: getTravels
+  summary: "Returns a list of travels." 
+  description: "" 
+  produces:
+    - application/json
   responses:
     200:
-      description: successful operation
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Travel'   
+      description: OK
+      schema:
+        $ref: "#/definitions/Travel"
 
 post:
-      tags:
-        - travel
-      summary: Create new travel
-      description: Create a new travel using form
-      operationId: createTravel
-      requestBody:
-        description: Created travel object
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/Travel'   
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/definitions/Travel'   
-      responses:
-        200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/definitions/Travel'   
+  tags:
+  - "travel"
+  summary: "Add a new travel to the shelf"
+  description: ""
+  operationId: "addTravel"
+  consumes:
+  - "application/json"
+  produces:
+  - "application/json"
+  parameters:
+  - in: "body"
+    name: "nameTravel"
+    description: "Travel object that need to be added to the shelf"
+    required: true
+    schema:
+      $ref: "#/definitions/Travel"
+  responses:
+    200:
+      description: "Succesful operation"
+    405:
+      description: "Invalid input"
