@@ -1,6 +1,9 @@
 get:
+  tags:
+    - "travel"
   summary: "Returns a list of travels." 
-  description: "" 
+  description: ""
+  operationId: "getTravels" 
   produces:
     - application/json
   responses:

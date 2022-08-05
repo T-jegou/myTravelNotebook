@@ -1,12 +1,12 @@
 swagger: '2.0'
 info:
   description: >
-    MyTravelNotebook is an application aim to provide a simple way to create a
+    MyTravelBook is an application aim to provide a simple way to create a
     booktrip.
-  title: MyTravelNotebook
+  title: MyTravelBook
   version: 1.0.0
 x-tagGroups:
-  - name: MyTravelNotebook management
+  - name: MyTravelBook management
     tags:
       - travel
 consumes:
@@ -19,8 +19,11 @@ basePath: /api/v1
 paths:
   /travel:
     get:
+      tags:
+        - travel
       summary: Returns a list of travels.
       description: ''
+      operationId: getTravels
       produces:
         - application/json
       responses:
@@ -78,9 +81,9 @@ paths:
     put:
       tags:
         - travel
-      summary: Updated travel
+      summary: Update an existing travel by ID
       description: ''
-      operationId: updateTravel
+      operationId: updateTravelById
       consumes:
         - application/json
       produces:
@@ -107,7 +110,7 @@ paths:
     delete:
       tags:
         - travel
-      summary: Deletes a travel
+      summary: Delete an existing travel using his Id
       description: ''
       operationId: deleteTravelById
       produces:

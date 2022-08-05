@@ -26,9 +26,9 @@ get:
 put:
   tags:
   - "travel"
-  summary: "Updated travel"
+  summary: "Update an existing travel by ID"
   description: ""
-  operationId: "updateTravel"
+  operationId: "updateTravelById"
   consumes:
   - "application/json"
   produces:
@@ -56,7 +56,7 @@ put:
 delete:
   tags:
   - "travel"
-  summary: "Deletes a travel"
+  summary: "Delete an existing travel using his Id"
   description: ""
   operationId: "deleteTravelById"
   produces:
