@@ -2,11 +2,11 @@
 swagger: "2.0"
 info:
   description: >
-    MyTravelNotebook is an application aim to provide a simple way to create a booktrip.
-  title: MyTravelNotebook
+    MyTravelBook is an application aim to provide a simple way to create a booktrip.
+  title: MyTravelBook
   version: 1.0.0
 x-tagGroups:
-  - name: MyTravelNotebook management
+  - name: MyTravelBook management
     tags:
       - travel
 consumes:
