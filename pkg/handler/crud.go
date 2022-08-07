@@ -2,9 +2,12 @@ package handler
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/travel"
 	"github.com/go-openapi/runtime/middleware"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 type CRUD interface {
@@ -21,6 +24,40 @@ type CRUD interface {
 // NewCRUD creates a new CRUD instance
 func NewCRUD() CRUD {
 	return &crud{}
+}
+
+type Travel struct {
+	ID                int `gorm:"primaryKey;autoIncrement"`
+	nameTravel        string
+	descriptionTravel string
+	country           string
+	CreatedAt         time.Time `gorm:"autoCreateTime"`
+}
+
+func InitialMigration() {
+
+	dsn := "host=localhost user=postgres password=postgrespw dbname=myTravel_notebook port=55000 sslmode=disable TimeZone=Asia/Shanghai"
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println(err.Error())
+		panic("Failed to connect to database")
+	} else {
+		fmt.Println("SUCCESFULY CONNECTEC")
+	}
+	db.AutoMigrate(&Travel{})
+
+	travel1 := Travel{
+		nameTravel:        "Ptit voyage en pologne",
+		descriptionTravel: "Pendant une semaine avec ma copine on va s'éclater à Cracovie",
+		country:           "Pologne",
+		CreatedAt:         time.Now(),
+	}
+
+	result := db.Create(&travel1)
+
+	fmt.Println(result.RowsAffected)
+	fmt.Println(result.Error)
+	fmt.Println(travel1.ID)
 }
 
 type crud struct{}
@@ -41,7 +78,7 @@ func (c *crud) UpdateTravel(params travel.UpdateTravelByIDParams) middleware.Res
 
 // travels
 func (c *crud) GetTravels(params travel.GetTravelsParams) middleware.Responder {
-	fmt.Println(params.HTTPRequest.Body)
+	InitialMigration()
 	return nil
 }
 
@@ -50,25 +87,3 @@ func (c *crud) AddTravel(params travel.AddTravelParams) middleware.Responder {
 
 	return nil
 }
-
-/* func (c *crud) CreateTag(params tag.CreateTagParams) middleware.Responder {
-	s := &entity.Flag{}
-	s.ID = uint(params.FlagID)
-	t := &entity.Tag{}
-	t.Value = util.SafeString(params.Body.Value)
-	if ok, reason := util.IsSafeValue(t.Value); !ok {
-		return tag.NewCreateTagDefault(400).WithPayload(ErrorMessage("%s", reason))
-	}
-
-	getDB().Where("value = ?", util.SafeString(params.Body.Value)).Find(t) // Find the existing tag to associate if it exists
-	if err := getDB().Model(s).Association("Tags").Append(t).Error; err != nil {
-		return tag.NewCreateTagDefault(500).WithPayload(ErrorMessage("%s", err))
-	}
-
-	resp := tag.NewCreateTagOK()
-	resp.SetPayload(e2r.MapTag(t))
-
-	entity.SaveFlagSnapshot(getDB(), util.SafeUint(params.FlagID), getSubjectFromRequest(params.HTTPRequest))
-	return resp
-}
-*/
