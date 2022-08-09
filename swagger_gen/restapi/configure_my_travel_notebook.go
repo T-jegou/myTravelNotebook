@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
+	"github.com/sirupsen/logrus"
 
 	"github.com/T-jegou/myTravelNotebook/pkg/handler"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations"
@@ -30,10 +31,14 @@ func configureAPI(api *operations.MyTravelNotebookAPI) http.Handler {
 	api.JSONConsumer = runtime.JSONConsumer()
 	api.JSONProducer = runtime.JSONProducer()
 
+	// Add logger -> logrus
+	api.Logger = logrus.Infof
+
 	api.PreServerShutdown = func() {}
 	api.ServerShutdown = func() {}
 
 	handler.Setup(api)
+
 	return setupGlobalMiddleware(api.Serve(setupMiddlewares))
 }
 
