@@ -2,12 +2,11 @@ package handler
 
 import (
 	"fmt"
-	"time"
+	"reflect"
 
+	"github.com/T-jegou/myTravelNotebook/pkg/entity"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/travel"
 	"github.com/go-openapi/runtime/middleware"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 type CRUD interface {
@@ -24,40 +23,6 @@ type CRUD interface {
 // NewCRUD creates a new CRUD instance
 func NewCRUD() CRUD {
 	return &crud{}
-}
-
-type Travel struct {
-	ID                int `gorm:"primaryKey;autoIncrement"`
-	nameTravel        string
-	descriptionTravel string
-	country           string
-	CreatedAt         time.Time `gorm:"autoCreateTime"`
-}
-
-func InitialMigration() {
-
-	dsn := "host=localhost user=postgres password=postgrespw dbname=myTravel_notebook port=55000 sslmode=disable TimeZone=Asia/Shanghai"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println(err.Error())
-		panic("Failed to connect to database")
-	} else {
-		fmt.Println("SUCCESFULY CONNECTEC")
-	}
-	db.AutoMigrate(&Travel{})
-
-	travel1 := Travel{
-		nameTravel:        "Ptit voyage en pologne",
-		descriptionTravel: "Pendant une semaine avec ma copine on va s'éclater à Cracovie",
-		country:           "Pologne",
-		CreatedAt:         time.Now(),
-	}
-
-	result := db.Create(&travel1)
-
-	fmt.Println(result.RowsAffected)
-	fmt.Println(result.Error)
-	fmt.Println(travel1.ID)
 }
 
 type crud struct{}
@@ -78,12 +43,13 @@ func (c *crud) UpdateTravel(params travel.UpdateTravelByIDParams) middleware.Res
 
 // travels
 func (c *crud) GetTravels(params travel.GetTravelsParams) middleware.Responder {
-	InitialMigration()
+	result := entity.GetDB().First(&entity.Travel{})
+	fmt.Println("type du resultat renvoyé  : ", reflect.TypeOf(result))
 	return nil
 }
 
 func (c *crud) AddTravel(params travel.AddTravelParams) middleware.Responder {
-	println("Bruhh")
+	println("hot  steuplait")
 
 	return nil
 }
