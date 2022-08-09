@@ -35,11 +35,11 @@ func (o *AddTravelURL) SetBasePath(bp string) {
 func (o *AddTravelURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/travel"
+	var _path = "/travels"
 
 	_basePath := o._basePath
 	if _basePath == "" {
-		_basePath = "/api/v1"
+		_basePath = "/mytravelbook"
 	}
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
 

@@ -29,7 +29,7 @@ func NewAddTravel(ctx *middleware.Context, handler AddTravelHandler) *AddTravel 
 	return &AddTravel{Context: ctx, Handler: handler}
 }
 
-/* AddTravel swagger:route POST /travel travel addTravel
+/* AddTravel swagger:route POST /travels travel addTravel
 
 Add a new travel to the shelf
 

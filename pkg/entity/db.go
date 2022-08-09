@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/T-jegou/myTravelNotebook/pkg/config"
@@ -11,7 +10,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
 	retry "github.com/avast/retry-go"
-	// "github.com/jinzhu/gorm"
 )
 
 var (
@@ -43,7 +41,6 @@ func GetDB() *gorm.DB {
 		db, err := connectDB()
 		if err != nil {
 			if config.Config.DBConnectionDebug {
-				fmt.Print("Connexion string :", config.Config.DBConnectionStr)
 				logrus.WithField("err", err).Fatal("failed to connect to db")
 			} else {
 				logrus.Fatal("failed to connect to db")

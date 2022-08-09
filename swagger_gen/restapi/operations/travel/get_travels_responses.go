@@ -16,7 +16,7 @@ import (
 // GetTravelsOKCode is the HTTP code returned for type GetTravelsOK
 const GetTravelsOKCode int = 200
 
-/*GetTravelsOK OK
+/*GetTravelsOK list all the travels
 
 swagger:response getTravelsOK
 */
@@ -25,7 +25,7 @@ type GetTravelsOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.Travel `json:"body,omitempty"`
+	Payload []*models.Travel `json:"body,omitempty"`
 }
 
 // NewGetTravelsOK creates GetTravelsOK with default headers values
@@ -35,13 +35,13 @@ func NewGetTravelsOK() *GetTravelsOK {
 }
 
 // WithPayload adds the payload to the get travels o k response
-func (o *GetTravelsOK) WithPayload(payload *models.Travel) *GetTravelsOK {
+func (o *GetTravelsOK) WithPayload(payload []*models.Travel) *GetTravelsOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get travels o k response
-func (o *GetTravelsOK) SetPayload(payload *models.Travel) {
+func (o *GetTravelsOK) SetPayload(payload []*models.Travel) {
 	o.Payload = payload
 }
 
@@ -49,6 +49,67 @@ func (o *GetTravelsOK) SetPayload(payload *models.Travel) {
 func (o *GetTravelsOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	rw.WriteHeader(200)
+	payload := o.Payload
+	if payload == nil {
+		// return empty array
+		payload = make([]*models.Travel, 0, 50)
+	}
+
+	if err := producer.Produce(rw, payload); err != nil {
+		panic(err) // let the recovery middleware deal with this
+	}
+}
+
+/*GetTravelsDefault generic error response
+
+swagger:response getTravelsDefault
+*/
+type GetTravelsDefault struct {
+	_statusCode int
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewGetTravelsDefault creates GetTravelsDefault with default headers values
+func NewGetTravelsDefault(code int) *GetTravelsDefault {
+	if code <= 0 {
+		code = 500
+	}
+
+	return &GetTravelsDefault{
+		_statusCode: code,
+	}
+}
+
+// WithStatusCode adds the status to the get travels default response
+func (o *GetTravelsDefault) WithStatusCode(code int) *GetTravelsDefault {
+	o._statusCode = code
+	return o
+}
+
+// SetStatusCode sets the status to the get travels default response
+func (o *GetTravelsDefault) SetStatusCode(code int) {
+	o._statusCode = code
+}
+
+// WithPayload adds the payload to the get travels default response
+func (o *GetTravelsDefault) WithPayload(payload *models.Error) *GetTravelsDefault {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get travels default response
+func (o *GetTravelsDefault) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *GetTravelsDefault) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	rw.WriteHeader(o._statusCode)
 	if o.Payload != nil {
 		payload := o.Payload
 		if err := producer.Produce(rw, payload); err != nil {

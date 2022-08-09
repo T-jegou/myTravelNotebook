@@ -29,13 +29,36 @@ func init() {
   ],
   "swagger": "2.0",
   "info": {
-    "description": "MyTravelBook is an application aim to provide a simple way to create a booktrip.\n",
+    "description": "\"MyTravelBook is an application aim to provide a simple way to create and store your vacation stories.\" \n",
     "title": "MyTravelBook",
     "version": "1.0.0"
   },
-  "basePath": "/api/v1",
+  "basePath": "/mytravelbook",
   "paths": {
-    "/travel": {
+    "/health": {
+      "get": {
+        "description": "Check if MyTravelBook is healthy",
+        "tags": [
+          "health"
+        ],
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "status of health check",
+            "schema": {
+              "$ref": "#/definitions/health"
+            }
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/travel/{travelId}": {
       "get": {
         "produces": [
           "application/json"
@@ -43,13 +66,127 @@ func init() {
         "tags": [
           "travel"
         ],
-        "summary": "Returns a list of travels.",
+        "summary": "Find travel by ID",
+        "operationId": "getTravelById",
+        "parameters": [
+          {
+            "minimum": 1,
+            "type": "integer",
+            "format": "int64",
+            "description": "id travel to be retrieve",
+            "name": "travelId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/travel"
+            }
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "travel"
+        ],
+        "summary": "Update an existing travel by ID",
+        "operationId": "updateTravelById",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "id's travel that need to be updated",
+            "name": "travelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Updated user object",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/updateTravelRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return the updateted travel",
+            "schema": {
+              "$ref": "#/definitions/travel"
+            }
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "travel"
+        ],
+        "summary": "Delete an existing travel using his Id",
+        "operationId": "deleteTravelById",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "numeric ID of the flag",
+            "name": "travelId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Travel successfuly deleted"
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/travels": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "travel"
+        ],
+        "summary": "Returns an array of travels object.",
         "operationId": "getTravels",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "list all the travels",
             "schema": {
-              "$ref": "#/definitions/Travel"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/travel"
+              }
+            }
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
             }
           }
         }
@@ -68,176 +205,147 @@ func init() {
         "operationId": "addTravel",
         "parameters": [
           {
-            "description": "Travel object that need to be added to the shelf",
-            "name": "nameTravel",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Travel"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Succesful operation"
-          },
-          "405": {
-            "description": "Invalid input"
-          }
-        }
-      }
-    },
-    "/travel/{id}": {
-      "get": {
-        "description": "Returns a single travel",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "travel"
-        ],
-        "summary": "Find travel by ID",
-        "operationId": "getTravelById",
-        "parameters": [
-          {
-            "type": "integer",
-            "format": "int64",
-            "description": "id's travel to be retrieve",
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Travel"
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Travel not found"
-          }
-        }
-      },
-      "put": {
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "travel"
-        ],
-        "summary": "Update an existing travel by ID",
-        "operationId": "updateTravelById",
-        "parameters": [
-          {
-            "type": "integer",
-            "description": "id's travel that need to be updated",
-            "name": "id",
-            "in": "path",
-            "required": true
-          },
-          {
-            "description": "Updated user object",
+            "description": "Create a travel object",
             "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Travel"
+              "$ref": "#/definitions/createTravelRequest"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Travel succesfully updated"
+            "description": "returns the created travel",
+            "schema": {
+              "$ref": "#/definitions/travel"
+            }
           },
-          "400": {
-            "description": "Invalid Travel supplied"
-          },
-          "404": {
-            "description": "User not found"
-          }
-        }
-      },
-      "delete": {
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "travel"
-        ],
-        "summary": "Delete an existing travel using his Id",
-        "operationId": "deleteTravelById",
-        "parameters": [
-          {
-            "type": "integer",
-            "format": "int64",
-            "description": "id's travel to delete",
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Travel successfuly deleted"
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Travel not found"
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
           }
         }
       }
     }
   },
   "definitions": {
-    "Travel": {
+    "createTravelRequest": {
       "type": "object",
       "required": [
-        "id"
+        "name",
+        "country",
+        "description"
       ],
       "properties": {
         "country": {
-          "description": "Country of the travel",
           "type": "string",
-          "example": "Lithuania"
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "health": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "travel": {
+      "type": "object",
+      "required": [
+        "name",
+        "country",
+        "description"
+      ],
+      "properties": {
+        "country": {
+          "type": "string",
+          "minLength": 1
         },
         "creationDate": {
           "type": "string",
           "format": "date-time"
         },
-        "descriptionTravel": {
-          "description": "Notes and resume of your trip !",
+        "description": {
           "type": "string",
-          "example": "I visit Cracovie, Katowice and Warsaw, but to be honest my favorite city was Gdansk"
+          "minLength": 1
         },
         "id": {
           "type": "integer",
           "format": "int64",
-          "example": 10
+          "minimum": 1
         },
-        "nameTravel": {
+        "name": {
           "description": "Name of your trip",
           "type": "string",
-          "example": "10 days in Poland"
+          "minLength": 1
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "updateTravelRequest": {
+      "type": "object",
+      "required": [
+        "name",
+        "country",
+        "description"
+      ],
+      "properties": {
+        "country": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
         }
       }
     }
   },
+  "tags": [
+    {
+      "description": "Everything about travel",
+      "name": "travel"
+    },
+    {
+      "description": "Health status of MyTravelBook",
+      "name": "health"
+    }
+  ],
   "x-tagGroups": [
     {
-      "name": "MyTravelBook management",
-      "tags": [
-        "travel"
-      ]
+      "name": "MyTravelBook management"
     }
   ]
 }`))
@@ -253,13 +361,36 @@ func init() {
   ],
   "swagger": "2.0",
   "info": {
-    "description": "MyTravelBook is an application aim to provide a simple way to create a booktrip.\n",
+    "description": "\"MyTravelBook is an application aim to provide a simple way to create and store your vacation stories.\" \n",
     "title": "MyTravelBook",
     "version": "1.0.0"
   },
-  "basePath": "/api/v1",
+  "basePath": "/mytravelbook",
   "paths": {
-    "/travel": {
+    "/health": {
+      "get": {
+        "description": "Check if MyTravelBook is healthy",
+        "tags": [
+          "health"
+        ],
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "status of health check",
+            "schema": {
+              "$ref": "#/definitions/health"
+            }
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/travel/{travelId}": {
       "get": {
         "produces": [
           "application/json"
@@ -267,13 +398,127 @@ func init() {
         "tags": [
           "travel"
         ],
-        "summary": "Returns a list of travels.",
+        "summary": "Find travel by ID",
+        "operationId": "getTravelById",
+        "parameters": [
+          {
+            "minimum": 1,
+            "type": "integer",
+            "format": "int64",
+            "description": "id travel to be retrieve",
+            "name": "travelId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/travel"
+            }
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "travel"
+        ],
+        "summary": "Update an existing travel by ID",
+        "operationId": "updateTravelById",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "id's travel that need to be updated",
+            "name": "travelId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Updated user object",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/updateTravelRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return the updateted travel",
+            "schema": {
+              "$ref": "#/definitions/travel"
+            }
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "travel"
+        ],
+        "summary": "Delete an existing travel using his Id",
+        "operationId": "deleteTravelById",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "numeric ID of the flag",
+            "name": "travelId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Travel successfuly deleted"
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/travels": {
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "travel"
+        ],
+        "summary": "Returns an array of travels object.",
         "operationId": "getTravels",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "list all the travels",
             "schema": {
-              "$ref": "#/definitions/Travel"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/travel"
+              }
+            }
+          },
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
             }
           }
         }
@@ -292,176 +537,147 @@ func init() {
         "operationId": "addTravel",
         "parameters": [
           {
-            "description": "Travel object that need to be added to the shelf",
-            "name": "nameTravel",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Travel"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Succesful operation"
-          },
-          "405": {
-            "description": "Invalid input"
-          }
-        }
-      }
-    },
-    "/travel/{id}": {
-      "get": {
-        "description": "Returns a single travel",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "travel"
-        ],
-        "summary": "Find travel by ID",
-        "operationId": "getTravelById",
-        "parameters": [
-          {
-            "type": "integer",
-            "format": "int64",
-            "description": "id's travel to be retrieve",
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Travel"
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Travel not found"
-          }
-        }
-      },
-      "put": {
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "travel"
-        ],
-        "summary": "Update an existing travel by ID",
-        "operationId": "updateTravelById",
-        "parameters": [
-          {
-            "type": "integer",
-            "description": "id's travel that need to be updated",
-            "name": "id",
-            "in": "path",
-            "required": true
-          },
-          {
-            "description": "Updated user object",
+            "description": "Create a travel object",
             "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Travel"
+              "$ref": "#/definitions/createTravelRequest"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Travel succesfully updated"
+            "description": "returns the created travel",
+            "schema": {
+              "$ref": "#/definitions/travel"
+            }
           },
-          "400": {
-            "description": "Invalid Travel supplied"
-          },
-          "404": {
-            "description": "User not found"
-          }
-        }
-      },
-      "delete": {
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "travel"
-        ],
-        "summary": "Delete an existing travel using his Id",
-        "operationId": "deleteTravelById",
-        "parameters": [
-          {
-            "type": "integer",
-            "format": "int64",
-            "description": "id's travel to delete",
-            "name": "id",
-            "in": "path",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Travel successfuly deleted"
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Travel not found"
+          "default": {
+            "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
           }
         }
       }
     }
   },
   "definitions": {
-    "Travel": {
+    "createTravelRequest": {
       "type": "object",
       "required": [
-        "id"
+        "name",
+        "country",
+        "description"
       ],
       "properties": {
         "country": {
-          "description": "Country of the travel",
           "type": "string",
-          "example": "Lithuania"
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "health": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "travel": {
+      "type": "object",
+      "required": [
+        "name",
+        "country",
+        "description"
+      ],
+      "properties": {
+        "country": {
+          "type": "string",
+          "minLength": 1
         },
         "creationDate": {
           "type": "string",
           "format": "date-time"
         },
-        "descriptionTravel": {
-          "description": "Notes and resume of your trip !",
+        "description": {
           "type": "string",
-          "example": "I visit Cracovie, Katowice and Warsaw, but to be honest my favorite city was Gdansk"
+          "minLength": 1
         },
         "id": {
           "type": "integer",
           "format": "int64",
-          "example": 10
+          "minimum": 1
         },
-        "nameTravel": {
+        "name": {
           "description": "Name of your trip",
           "type": "string",
-          "example": "10 days in Poland"
+          "minLength": 1
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "updateTravelRequest": {
+      "type": "object",
+      "required": [
+        "name",
+        "country",
+        "description"
+      ],
+      "properties": {
+        "country": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
         }
       }
     }
   },
+  "tags": [
+    {
+      "description": "Everything about travel",
+      "name": "travel"
+    },
+    {
+      "description": "Health status of MyTravelBook",
+      "name": "health"
+    }
+  ],
   "x-tagGroups": [
     {
-      "name": "MyTravelBook management",
-      "tags": [
-        "travel"
-      ]
+      "name": "MyTravelBook management"
     }
   ]
 }`))

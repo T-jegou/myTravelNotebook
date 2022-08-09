@@ -2,12 +2,12 @@
 
 // Package restapi MyTravelBook
 //
-//  MyTravelBook is an application aim to provide a simple way to create a booktrip.
+//  "MyTravelBook is an application aim to provide a simple way to create and store your vacation stories."
 //
 //  Schemes:
 //    http
 //  Host: localhost
-//  BasePath: /api/v1
+//  BasePath: /mytravelbook
 //  Version: 1.0.0
 //
 //  Consumes:

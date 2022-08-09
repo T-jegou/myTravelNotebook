@@ -29,11 +29,9 @@ func NewGetTravelByID(ctx *middleware.Context, handler GetTravelByIDHandler) *Ge
 	return &GetTravelByID{Context: ctx, Handler: handler}
 }
 
-/* GetTravelByID swagger:route GET /travel/{id} travel getTravelById
+/* GetTravelByID swagger:route GET /travel/{travelId} travel getTravelById
 
 Find travel by ID
-
-Returns a single travel
 
 */
 type GetTravelByID struct {

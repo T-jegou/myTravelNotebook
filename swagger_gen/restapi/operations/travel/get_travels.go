@@ -29,9 +29,9 @@ func NewGetTravels(ctx *middleware.Context, handler GetTravelsHandler) *GetTrave
 	return &GetTravels{Context: ctx, Handler: handler}
 }
 
-/* GetTravels swagger:route GET /travel travel getTravels
+/* GetTravels swagger:route GET /travels travel getTravels
 
-Returns a list of travels.
+Returns an array of travels object.
 
 */
 type GetTravels struct {

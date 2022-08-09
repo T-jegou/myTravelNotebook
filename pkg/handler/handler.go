@@ -5,11 +5,11 @@ import (
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/travel"
 )
 
-func Setup(api *operations.MyTravelNotebookAPI) {
+func Setup(api *operations.MyTravelBookAPI) {
 	setupCRUD(api)
 }
 
-func setupCRUD(api *operations.MyTravelNotebookAPI) {
+func setupCRUD(api *operations.MyTravelBookAPI) {
 	c := NewCRUD()
 
 	// Travels

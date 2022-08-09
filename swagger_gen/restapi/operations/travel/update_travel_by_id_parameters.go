@@ -41,12 +41,12 @@ type UpdateTravelByIDParams struct {
 	  Required: true
 	  In: body
 	*/
-	Body *models.Travel
+	Body *models.UpdateTravelRequest
 	/*id's travel that need to be updated
 	  Required: true
 	  In: path
 	*/
-	ID int64
+	TravelID int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -60,7 +60,7 @@ func (o *UpdateTravelByIDParams) BindRequest(r *http.Request, route *middleware.
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body models.Travel
+		var body models.UpdateTravelRequest
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
 				res = append(res, errors.Required("body", "body", ""))
@@ -86,8 +86,8 @@ func (o *UpdateTravelByIDParams) BindRequest(r *http.Request, route *middleware.
 		res = append(res, errors.Required("body", "body", ""))
 	}
 
-	rID, rhkID, _ := route.Params.GetOK("id")
-	if err := o.bindID(rID, rhkID, route.Formats); err != nil {
+	rTravelID, rhkTravelID, _ := route.Params.GetOK("travelId")
+	if err := o.bindTravelID(rTravelID, rhkTravelID, route.Formats); err != nil {
 		res = append(res, err)
 	}
 	if len(res) > 0 {
@@ -96,8 +96,8 @@ func (o *UpdateTravelByIDParams) BindRequest(r *http.Request, route *middleware.
 	return nil
 }
 
-// bindID binds and validates parameter ID from path.
-func (o *UpdateTravelByIDParams) bindID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+// bindTravelID binds and validates parameter TravelID from path.
+func (o *UpdateTravelByIDParams) bindTravelID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -108,9 +108,9 @@ func (o *UpdateTravelByIDParams) bindID(rawData []string, hasKey bool, formats s
 
 	value, err := swag.ConvertInt64(raw)
 	if err != nil {
-		return errors.InvalidType("id", "path", "int64", raw)
+		return errors.InvalidType("travelId", "path", "int64", raw)
 	}
-	o.ID = value
+	o.TravelID = value
 
 	return nil
 }

@@ -29,7 +29,7 @@ func NewDeleteTravelByID(ctx *middleware.Context, handler DeleteTravelByIDHandle
 	return &DeleteTravelByID{Context: ctx, Handler: handler}
 }
 
-/* DeleteTravelByID swagger:route DELETE /travel/{id} travel deleteTravelById
+/* DeleteTravelByID swagger:route DELETE /travel/{travelId} travel deleteTravelById
 
 Delete an existing travel using his Id
 

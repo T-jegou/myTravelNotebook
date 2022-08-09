@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"reflect"
 
 	"github.com/T-jegou/myTravelNotebook/pkg/entity"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/travel"
@@ -43,13 +42,16 @@ func (c *crud) UpdateTravel(params travel.UpdateTravelByIDParams) middleware.Res
 
 // travels
 func (c *crud) GetTravels(params travel.GetTravelsParams) middleware.Responder {
-	result := entity.GetDB().First(&entity.Travel{})
-	fmt.Println("type du resultat renvoyé  : ", reflect.TypeOf(result))
+	dbInstance := entity.GetDB()
+	travel := entity.Travel{NameTravel: "Quelques jours en normandie", Country: "France", Description: "Blah blah blah"}
+
+	result := dbInstance.Create(&travel)
+	fmt.Print(result.Error, travel.ID)
 	return nil
 }
 
 func (c *crud) AddTravel(params travel.AddTravelParams) middleware.Responder {
-	println("hot  steuplait")
+	println("Post")
 
 	return nil
 }

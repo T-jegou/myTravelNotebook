@@ -9,16 +9,23 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/runtime"
+
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/models"
 )
 
 // UpdateTravelByIDOKCode is the HTTP code returned for type UpdateTravelByIDOK
 const UpdateTravelByIDOKCode int = 200
 
-/*UpdateTravelByIDOK Travel succesfully updated
+/*UpdateTravelByIDOK return the updateted travel
 
 swagger:response updateTravelByIdOK
 */
 type UpdateTravelByIDOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Travel `json:"body,omitempty"`
 }
 
 // NewUpdateTravelByIDOK creates UpdateTravelByIDOK with default headers values
@@ -27,58 +34,83 @@ func NewUpdateTravelByIDOK() *UpdateTravelByIDOK {
 	return &UpdateTravelByIDOK{}
 }
 
+// WithPayload adds the payload to the update travel by Id o k response
+func (o *UpdateTravelByIDOK) WithPayload(payload *models.Travel) *UpdateTravelByIDOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update travel by Id o k response
+func (o *UpdateTravelByIDOK) SetPayload(payload *models.Travel) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *UpdateTravelByIDOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }
 
-// UpdateTravelByIDBadRequestCode is the HTTP code returned for type UpdateTravelByIDBadRequest
-const UpdateTravelByIDBadRequestCode int = 400
+/*UpdateTravelByIDDefault generic error response
 
-/*UpdateTravelByIDBadRequest Invalid Travel supplied
-
-swagger:response updateTravelByIdBadRequest
+swagger:response updateTravelByIdDefault
 */
-type UpdateTravelByIDBadRequest struct {
+type UpdateTravelByIDDefault struct {
+	_statusCode int
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
 }
 
-// NewUpdateTravelByIDBadRequest creates UpdateTravelByIDBadRequest with default headers values
-func NewUpdateTravelByIDBadRequest() *UpdateTravelByIDBadRequest {
+// NewUpdateTravelByIDDefault creates UpdateTravelByIDDefault with default headers values
+func NewUpdateTravelByIDDefault(code int) *UpdateTravelByIDDefault {
+	if code <= 0 {
+		code = 500
+	}
 
-	return &UpdateTravelByIDBadRequest{}
+	return &UpdateTravelByIDDefault{
+		_statusCode: code,
+	}
+}
+
+// WithStatusCode adds the status to the update travel by Id default response
+func (o *UpdateTravelByIDDefault) WithStatusCode(code int) *UpdateTravelByIDDefault {
+	o._statusCode = code
+	return o
+}
+
+// SetStatusCode sets the status to the update travel by Id default response
+func (o *UpdateTravelByIDDefault) SetStatusCode(code int) {
+	o._statusCode = code
+}
+
+// WithPayload adds the payload to the update travel by Id default response
+func (o *UpdateTravelByIDDefault) WithPayload(payload *models.Error) *UpdateTravelByIDDefault {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the update travel by Id default response
+func (o *UpdateTravelByIDDefault) SetPayload(payload *models.Error) {
+	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *UpdateTravelByIDBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *UpdateTravelByIDDefault) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
-	rw.WriteHeader(400)
-}
-
-// UpdateTravelByIDNotFoundCode is the HTTP code returned for type UpdateTravelByIDNotFound
-const UpdateTravelByIDNotFoundCode int = 404
-
-/*UpdateTravelByIDNotFound User not found
-
-swagger:response updateTravelByIdNotFound
-*/
-type UpdateTravelByIDNotFound struct {
-}
-
-// NewUpdateTravelByIDNotFound creates UpdateTravelByIDNotFound with default headers values
-func NewUpdateTravelByIDNotFound() *UpdateTravelByIDNotFound {
-
-	return &UpdateTravelByIDNotFound{}
-}
-
-// WriteResponse to the client
-func (o *UpdateTravelByIDNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
-
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
-	rw.WriteHeader(404)
+	rw.WriteHeader(o._statusCode)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }

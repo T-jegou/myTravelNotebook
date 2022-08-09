@@ -29,7 +29,7 @@ func NewUpdateTravelByID(ctx *middleware.Context, handler UpdateTravelByIDHandle
 	return &UpdateTravelByID{Context: ctx, Handler: handler}
 }
 
-/* UpdateTravelByID swagger:route PUT /travel/{id} travel updateTravelById
+/* UpdateTravelByID swagger:route PUT /travel/{travelId} travel updateTravelById
 
 Update an existing travel by ID
 

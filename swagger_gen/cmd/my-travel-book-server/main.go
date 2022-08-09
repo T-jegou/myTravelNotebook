@@ -23,13 +23,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	api := operations.NewMyTravelNotebookAPI(swaggerSpec)
+	api := operations.NewMyTravelBookAPI(swaggerSpec)
 	server := restapi.NewServer(api)
 	defer server.Shutdown()
 
 	parser := flags.NewParser(server, flags.Default)
 	parser.ShortDescription = "MyTravelBook"
-	parser.LongDescription = "MyTravelBook is an application aim to provide a simple way to create a booktrip.\n"
+	parser.LongDescription = "\"MyTravelBook is an application aim to provide a simple way to create and store your vacation stories.\" \n"
 	server.ConfigureFlags()
 	for _, optsGroup := range api.CommandLineOptionsGroups {
 		_, err := parser.AddGroup(optsGroup.ShortDescription, optsGroup.LongDescription, optsGroup.Options)
@@ -54,6 +54,4 @@ func main() {
 		log.Fatalln(err)
 	}
 
-
 }
-

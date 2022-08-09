@@ -16,36 +16,50 @@ import (
 
 // Travel travel
 //
-// swagger:model Travel
+// swagger:model travel
 type Travel struct {
 
-	// Country of the travel
-	// Example: Lithuania
-	Country string `json:"country,omitempty"`
+	// country
+	// Required: true
+	// Min Length: 1
+	Country *string `json:"country"`
 
 	// creation date
 	// Format: date-time
 	CreationDate strfmt.DateTime `json:"creationDate,omitempty"`
 
-	// Notes and resume of your trip !
-	// Example: I visit Cracovie, Katowice and Warsaw, but to be honest my favorite city was Gdansk
-	DescriptionTravel string `json:"descriptionTravel,omitempty"`
+	// description
+	// Required: true
+	// Min Length: 1
+	Description *string `json:"description"`
 
 	// id
-	// Example: 10
-	// Required: true
-	ID *int64 `json:"id"`
+	// Minimum: 1
+	ID int64 `json:"id,omitempty"`
 
 	// Name of your trip
-	// Example: 10 days in Poland
-	NameTravel string `json:"nameTravel,omitempty"`
+	// Required: true
+	// Min Length: 1
+	Name *string `json:"name"`
+
+	// updated at
+	// Format: date-time
+	UpdatedAt strfmt.DateTime `json:"updatedAt,omitempty"`
 }
 
 // Validate validates this travel
 func (m *Travel) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateCountry(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCreationDate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDescription(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -53,9 +67,30 @@ func (m *Travel) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateUpdatedAt(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Travel) validateCountry(formats strfmt.Registry) error {
+
+	if err := validate.Required("country", "body", m.Country); err != nil {
+		return err
+	}
+
+	if err := validate.MinLength("country", "body", *m.Country, 1); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -71,9 +106,50 @@ func (m *Travel) validateCreationDate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Travel) validateID(formats strfmt.Registry) error {
+func (m *Travel) validateDescription(formats strfmt.Registry) error {
 
-	if err := validate.Required("id", "body", m.ID); err != nil {
+	if err := validate.Required("description", "body", m.Description); err != nil {
+		return err
+	}
+
+	if err := validate.MinLength("description", "body", *m.Description, 1); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Travel) validateID(formats strfmt.Registry) error {
+	if swag.IsZero(m.ID) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("id", "body", m.ID, 1, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Travel) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	if err := validate.MinLength("name", "body", *m.Name, 1); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Travel) validateUpdatedAt(formats strfmt.Registry) error {
+	if swag.IsZero(m.UpdatedAt) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("updatedAt", "body", "date-time", m.UpdatedAt.String(), formats); err != nil {
 		return err
 	}
 

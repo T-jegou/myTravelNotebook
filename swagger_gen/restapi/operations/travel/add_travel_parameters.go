@@ -35,11 +35,11 @@ type AddTravelParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*Travel object that need to be added to the shelf
+	/*Create a travel object
 	  Required: true
 	  In: body
 	*/
-	NameTravel *models.Travel
+	Body *models.CreateTravelRequest
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -53,12 +53,12 @@ func (o *AddTravelParams) BindRequest(r *http.Request, route *middleware.Matched
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
-		var body models.Travel
+		var body models.CreateTravelRequest
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
 			if err == io.EOF {
-				res = append(res, errors.Required("nameTravel", "body", ""))
+				res = append(res, errors.Required("body", "body", ""))
 			} else {
-				res = append(res, errors.NewParseError("nameTravel", "body", "", err))
+				res = append(res, errors.NewParseError("body", "body", "", err))
 			}
 		} else {
 			// validate body object
@@ -72,11 +72,11 @@ func (o *AddTravelParams) BindRequest(r *http.Request, route *middleware.Matched
 			}
 
 			if len(res) == 0 {
-				o.NameTravel = &body
+				o.Body = &body
 			}
 		}
 	} else {
-		res = append(res, errors.Required("nameTravel", "body", ""))
+		res = append(res, errors.Required("body", "body", ""))
 	}
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

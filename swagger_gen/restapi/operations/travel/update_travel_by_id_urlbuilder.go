@@ -16,7 +16,7 @@ import (
 
 // UpdateTravelByIDURL generates an URL for the update travel by Id operation
 type UpdateTravelByIDURL struct {
-	ID int64
+	TravelID int64
 
 	_basePath string
 	// avoid unkeyed usage
@@ -42,18 +42,18 @@ func (o *UpdateTravelByIDURL) SetBasePath(bp string) {
 func (o *UpdateTravelByIDURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/travel/{id}"
+	var _path = "/travel/{travelId}"
 
-	id := swag.FormatInt64(o.ID)
-	if id != "" {
-		_path = strings.Replace(_path, "{id}", id, -1)
+	travelID := swag.FormatInt64(o.TravelID)
+	if travelID != "" {
+		_path = strings.Replace(_path, "{travelId}", travelID, -1)
 	} else {
-		return nil, errors.New("id is required on UpdateTravelByIDURL")
+		return nil, errors.New("travelId is required on UpdateTravelByIDURL")
 	}
 
 	_basePath := o._basePath
 	if _basePath == "" {
-		_basePath = "/api/v1"
+		_basePath = "/mytravelbook"
 	}
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
 

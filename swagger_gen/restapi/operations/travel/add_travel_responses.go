@@ -9,16 +9,23 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/runtime"
+
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/models"
 )
 
 // AddTravelOKCode is the HTTP code returned for type AddTravelOK
 const AddTravelOKCode int = 200
 
-/*AddTravelOK Succesful operation
+/*AddTravelOK returns the created travel
 
 swagger:response addTravelOK
 */
 type AddTravelOK struct {
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Travel `json:"body,omitempty"`
 }
 
 // NewAddTravelOK creates AddTravelOK with default headers values
@@ -27,34 +34,83 @@ func NewAddTravelOK() *AddTravelOK {
 	return &AddTravelOK{}
 }
 
+// WithPayload adds the payload to the add travel o k response
+func (o *AddTravelOK) WithPayload(payload *models.Travel) *AddTravelOK {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the add travel o k response
+func (o *AddTravelOK) SetPayload(payload *models.Travel) {
+	o.Payload = payload
+}
+
 // WriteResponse to the client
 func (o *AddTravelOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
 	rw.WriteHeader(200)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }
 
-// AddTravelMethodNotAllowedCode is the HTTP code returned for type AddTravelMethodNotAllowed
-const AddTravelMethodNotAllowedCode int = 405
+/*AddTravelDefault generic error response
 
-/*AddTravelMethodNotAllowed Invalid input
-
-swagger:response addTravelMethodNotAllowed
+swagger:response addTravelDefault
 */
-type AddTravelMethodNotAllowed struct {
+type AddTravelDefault struct {
+	_statusCode int
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
 }
 
-// NewAddTravelMethodNotAllowed creates AddTravelMethodNotAllowed with default headers values
-func NewAddTravelMethodNotAllowed() *AddTravelMethodNotAllowed {
+// NewAddTravelDefault creates AddTravelDefault with default headers values
+func NewAddTravelDefault(code int) *AddTravelDefault {
+	if code <= 0 {
+		code = 500
+	}
 
-	return &AddTravelMethodNotAllowed{}
+	return &AddTravelDefault{
+		_statusCode: code,
+	}
+}
+
+// WithStatusCode adds the status to the add travel default response
+func (o *AddTravelDefault) WithStatusCode(code int) *AddTravelDefault {
+	o._statusCode = code
+	return o
+}
+
+// SetStatusCode sets the status to the add travel default response
+func (o *AddTravelDefault) SetStatusCode(code int) {
+	o._statusCode = code
+}
+
+// WithPayload adds the payload to the add travel default response
+func (o *AddTravelDefault) WithPayload(payload *models.Error) *AddTravelDefault {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the add travel default response
+func (o *AddTravelDefault) SetPayload(payload *models.Error) {
+	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *AddTravelMethodNotAllowed) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *AddTravelDefault) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
-	rw.WriteHeader(405)
+	rw.WriteHeader(o._statusCode)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }

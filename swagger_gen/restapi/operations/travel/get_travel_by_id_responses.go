@@ -57,50 +57,60 @@ func (o *GetTravelByIDOK) WriteResponse(rw http.ResponseWriter, producer runtime
 	}
 }
 
-// GetTravelByIDBadRequestCode is the HTTP code returned for type GetTravelByIDBadRequest
-const GetTravelByIDBadRequestCode int = 400
+/*GetTravelByIDDefault generic error response
 
-/*GetTravelByIDBadRequest Invalid ID supplied
-
-swagger:response getTravelByIdBadRequest
+swagger:response getTravelByIdDefault
 */
-type GetTravelByIDBadRequest struct {
+type GetTravelByIDDefault struct {
+	_statusCode int
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
 }
 
-// NewGetTravelByIDBadRequest creates GetTravelByIDBadRequest with default headers values
-func NewGetTravelByIDBadRequest() *GetTravelByIDBadRequest {
+// NewGetTravelByIDDefault creates GetTravelByIDDefault with default headers values
+func NewGetTravelByIDDefault(code int) *GetTravelByIDDefault {
+	if code <= 0 {
+		code = 500
+	}
 
-	return &GetTravelByIDBadRequest{}
+	return &GetTravelByIDDefault{
+		_statusCode: code,
+	}
+}
+
+// WithStatusCode adds the status to the get travel by Id default response
+func (o *GetTravelByIDDefault) WithStatusCode(code int) *GetTravelByIDDefault {
+	o._statusCode = code
+	return o
+}
+
+// SetStatusCode sets the status to the get travel by Id default response
+func (o *GetTravelByIDDefault) SetStatusCode(code int) {
+	o._statusCode = code
+}
+
+// WithPayload adds the payload to the get travel by Id default response
+func (o *GetTravelByIDDefault) WithPayload(payload *models.Error) *GetTravelByIDDefault {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the get travel by Id default response
+func (o *GetTravelByIDDefault) SetPayload(payload *models.Error) {
+	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *GetTravelByIDBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *GetTravelByIDDefault) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
-	rw.WriteHeader(400)
-}
-
-// GetTravelByIDNotFoundCode is the HTTP code returned for type GetTravelByIDNotFound
-const GetTravelByIDNotFoundCode int = 404
-
-/*GetTravelByIDNotFound Travel not found
-
-swagger:response getTravelByIdNotFound
-*/
-type GetTravelByIDNotFound struct {
-}
-
-// NewGetTravelByIDNotFound creates GetTravelByIDNotFound with default headers values
-func NewGetTravelByIDNotFound() *GetTravelByIDNotFound {
-
-	return &GetTravelByIDNotFound{}
-}
-
-// WriteResponse to the client
-func (o *GetTravelByIDNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
-
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
-	rw.WriteHeader(404)
+	rw.WriteHeader(o._statusCode)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }

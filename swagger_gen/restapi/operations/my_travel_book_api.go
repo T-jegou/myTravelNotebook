@@ -19,12 +19,13 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/health"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/travel"
 )
 
-// NewMyTravelNotebookAPI creates a new MyTravelNotebook instance
-func NewMyTravelNotebookAPI(spec *loads.Document) *MyTravelNotebookAPI {
-	return &MyTravelNotebookAPI{
+// NewMyTravelBookAPI creates a new MyTravelBook instance
+func NewMyTravelBookAPI(spec *loads.Document) *MyTravelBookAPI {
+	return &MyTravelBookAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
 		defaultConsumes:     "application/json",
@@ -50,6 +51,9 @@ func NewMyTravelNotebookAPI(spec *loads.Document) *MyTravelNotebookAPI {
 		TravelDeleteTravelByIDHandler: travel.DeleteTravelByIDHandlerFunc(func(params travel.DeleteTravelByIDParams) middleware.Responder {
 			return middleware.NotImplemented("operation travel.DeleteTravelByID has not yet been implemented")
 		}),
+		HealthGetHealthHandler: health.GetHealthHandlerFunc(func(params health.GetHealthParams) middleware.Responder {
+			return middleware.NotImplemented("operation health.GetHealth has not yet been implemented")
+		}),
 		TravelGetTravelByIDHandler: travel.GetTravelByIDHandlerFunc(func(params travel.GetTravelByIDParams) middleware.Responder {
 			return middleware.NotImplemented("operation travel.GetTravelByID has not yet been implemented")
 		}),
@@ -62,9 +66,9 @@ func NewMyTravelNotebookAPI(spec *loads.Document) *MyTravelNotebookAPI {
 	}
 }
 
-/*MyTravelNotebookAPI MyTravelBook is an application aim to provide a simple way to create a booktrip.
+/*MyTravelBookAPI "MyTravelBook is an application aim to provide a simple way to create and store your vacation stories."
  */
-type MyTravelNotebookAPI struct {
+type MyTravelBookAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -100,6 +104,8 @@ type MyTravelNotebookAPI struct {
 	TravelAddTravelHandler travel.AddTravelHandler
 	// TravelDeleteTravelByIDHandler sets the operation handler for the delete travel by Id operation
 	TravelDeleteTravelByIDHandler travel.DeleteTravelByIDHandler
+	// HealthGetHealthHandler sets the operation handler for the get health operation
+	HealthGetHealthHandler health.GetHealthHandler
 	// TravelGetTravelByIDHandler sets the operation handler for the get travel by Id operation
 	TravelGetTravelByIDHandler travel.GetTravelByIDHandler
 	// TravelGetTravelsHandler sets the operation handler for the get travels operation
@@ -127,52 +133,52 @@ type MyTravelNotebookAPI struct {
 }
 
 // UseRedoc for documentation at /docs
-func (o *MyTravelNotebookAPI) UseRedoc() {
+func (o *MyTravelBookAPI) UseRedoc() {
 	o.useSwaggerUI = false
 }
 
 // UseSwaggerUI for documentation at /docs
-func (o *MyTravelNotebookAPI) UseSwaggerUI() {
+func (o *MyTravelBookAPI) UseSwaggerUI() {
 	o.useSwaggerUI = true
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *MyTravelNotebookAPI) SetDefaultProduces(mediaType string) {
+func (o *MyTravelBookAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *MyTravelNotebookAPI) SetDefaultConsumes(mediaType string) {
+func (o *MyTravelBookAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *MyTravelNotebookAPI) SetSpec(spec *loads.Document) {
+func (o *MyTravelBookAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *MyTravelNotebookAPI) DefaultProduces() string {
+func (o *MyTravelBookAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *MyTravelNotebookAPI) DefaultConsumes() string {
+func (o *MyTravelBookAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *MyTravelNotebookAPI) Formats() strfmt.Registry {
+func (o *MyTravelBookAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *MyTravelNotebookAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *MyTravelBookAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the MyTravelNotebookAPI
-func (o *MyTravelNotebookAPI) Validate() error {
+// Validate validates the registrations in the MyTravelBookAPI
+func (o *MyTravelBookAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -188,6 +194,9 @@ func (o *MyTravelNotebookAPI) Validate() error {
 	}
 	if o.TravelDeleteTravelByIDHandler == nil {
 		unregistered = append(unregistered, "travel.DeleteTravelByIDHandler")
+	}
+	if o.HealthGetHealthHandler == nil {
+		unregistered = append(unregistered, "health.GetHealthHandler")
 	}
 	if o.TravelGetTravelByIDHandler == nil {
 		unregistered = append(unregistered, "travel.GetTravelByIDHandler")
@@ -207,23 +216,23 @@ func (o *MyTravelNotebookAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *MyTravelNotebookAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *MyTravelBookAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *MyTravelNotebookAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+func (o *MyTravelBookAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 	return nil
 }
 
 // Authorizer returns the registered authorizer
-func (o *MyTravelNotebookAPI) Authorizer() runtime.Authorizer {
+func (o *MyTravelBookAPI) Authorizer() runtime.Authorizer {
 	return nil
 }
 
 // ConsumersFor gets the consumers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *MyTravelNotebookAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *MyTravelBookAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 	result := make(map[string]runtime.Consumer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -240,7 +249,7 @@ func (o *MyTravelNotebookAPI) ConsumersFor(mediaTypes []string) map[string]runti
 
 // ProducersFor gets the producers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *MyTravelNotebookAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *MyTravelBookAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 	result := make(map[string]runtime.Producer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -256,7 +265,7 @@ func (o *MyTravelNotebookAPI) ProducersFor(mediaTypes []string) map[string]runti
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *MyTravelNotebookAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *MyTravelBookAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -271,8 +280,8 @@ func (o *MyTravelNotebookAPI) HandlerFor(method, path string) (http.Handler, boo
 	return h, ok
 }
 
-// Context returns the middleware context for the my travel notebook API
-func (o *MyTravelNotebookAPI) Context() *middleware.Context {
+// Context returns the middleware context for the my travel book API
+func (o *MyTravelBookAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -280,7 +289,7 @@ func (o *MyTravelNotebookAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *MyTravelNotebookAPI) initHandlerCache() {
+func (o *MyTravelBookAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 	if o.handlers == nil {
 		o.handlers = make(map[string]map[string]http.Handler)
@@ -289,28 +298,32 @@ func (o *MyTravelNotebookAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/travel"] = travel.NewAddTravel(o.context, o.TravelAddTravelHandler)
+	o.handlers["POST"]["/travels"] = travel.NewAddTravel(o.context, o.TravelAddTravelHandler)
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
-	o.handlers["DELETE"]["/travel/{id}"] = travel.NewDeleteTravelByID(o.context, o.TravelDeleteTravelByIDHandler)
+	o.handlers["DELETE"]["/travel/{travelId}"] = travel.NewDeleteTravelByID(o.context, o.TravelDeleteTravelByIDHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/travel/{id}"] = travel.NewGetTravelByID(o.context, o.TravelGetTravelByIDHandler)
+	o.handlers["GET"]["/health"] = health.NewGetHealth(o.context, o.HealthGetHealthHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/travel"] = travel.NewGetTravels(o.context, o.TravelGetTravelsHandler)
+	o.handlers["GET"]["/travel/{travelId}"] = travel.NewGetTravelByID(o.context, o.TravelGetTravelByIDHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/travels"] = travel.NewGetTravels(o.context, o.TravelGetTravelsHandler)
 	if o.handlers["PUT"] == nil {
 		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
-	o.handlers["PUT"]["/travel/{id}"] = travel.NewUpdateTravelByID(o.context, o.TravelUpdateTravelByIDHandler)
+	o.handlers["PUT"]["/travel/{travelId}"] = travel.NewUpdateTravelByID(o.context, o.TravelUpdateTravelByIDHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *MyTravelNotebookAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *MyTravelBookAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -323,24 +336,24 @@ func (o *MyTravelNotebookAPI) Serve(builder middleware.Builder) http.Handler {
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middleware as you see fit
-func (o *MyTravelNotebookAPI) Init() {
+func (o *MyTravelBookAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}
 }
 
 // RegisterConsumer allows you to add (or override) a consumer for a media type.
-func (o *MyTravelNotebookAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
+func (o *MyTravelBookAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
 	o.customConsumers[mediaType] = consumer
 }
 
 // RegisterProducer allows you to add (or override) a producer for a media type.
-func (o *MyTravelNotebookAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
+func (o *MyTravelBookAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
 }
 
 // AddMiddlewareFor adds a http middleware to existing handler
-func (o *MyTravelNotebookAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
+func (o *MyTravelBookAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
 	um := strings.ToUpper(method)
 	if path == "/" {
 		path = ""

@@ -9,6 +9,8 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/runtime"
+
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/models"
 )
 
 // DeleteTravelByIDOKCode is the HTTP code returned for type DeleteTravelByIDOK
@@ -35,50 +37,60 @@ func (o *DeleteTravelByIDOK) WriteResponse(rw http.ResponseWriter, producer runt
 	rw.WriteHeader(200)
 }
 
-// DeleteTravelByIDBadRequestCode is the HTTP code returned for type DeleteTravelByIDBadRequest
-const DeleteTravelByIDBadRequestCode int = 400
+/*DeleteTravelByIDDefault generic error response
 
-/*DeleteTravelByIDBadRequest Invalid ID supplied
-
-swagger:response deleteTravelByIdBadRequest
+swagger:response deleteTravelByIdDefault
 */
-type DeleteTravelByIDBadRequest struct {
+type DeleteTravelByIDDefault struct {
+	_statusCode int
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
 }
 
-// NewDeleteTravelByIDBadRequest creates DeleteTravelByIDBadRequest with default headers values
-func NewDeleteTravelByIDBadRequest() *DeleteTravelByIDBadRequest {
+// NewDeleteTravelByIDDefault creates DeleteTravelByIDDefault with default headers values
+func NewDeleteTravelByIDDefault(code int) *DeleteTravelByIDDefault {
+	if code <= 0 {
+		code = 500
+	}
 
-	return &DeleteTravelByIDBadRequest{}
+	return &DeleteTravelByIDDefault{
+		_statusCode: code,
+	}
+}
+
+// WithStatusCode adds the status to the delete travel by Id default response
+func (o *DeleteTravelByIDDefault) WithStatusCode(code int) *DeleteTravelByIDDefault {
+	o._statusCode = code
+	return o
+}
+
+// SetStatusCode sets the status to the delete travel by Id default response
+func (o *DeleteTravelByIDDefault) SetStatusCode(code int) {
+	o._statusCode = code
+}
+
+// WithPayload adds the payload to the delete travel by Id default response
+func (o *DeleteTravelByIDDefault) WithPayload(payload *models.Error) *DeleteTravelByIDDefault {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the delete travel by Id default response
+func (o *DeleteTravelByIDDefault) SetPayload(payload *models.Error) {
+	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *DeleteTravelByIDBadRequest) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *DeleteTravelByIDDefault) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
-	rw.WriteHeader(400)
-}
-
-// DeleteTravelByIDNotFoundCode is the HTTP code returned for type DeleteTravelByIDNotFound
-const DeleteTravelByIDNotFoundCode int = 404
-
-/*DeleteTravelByIDNotFound Travel not found
-
-swagger:response deleteTravelByIdNotFound
-*/
-type DeleteTravelByIDNotFound struct {
-}
-
-// NewDeleteTravelByIDNotFound creates DeleteTravelByIDNotFound with default headers values
-func NewDeleteTravelByIDNotFound() *DeleteTravelByIDNotFound {
-
-	return &DeleteTravelByIDNotFound{}
-}
-
-// WriteResponse to the client
-func (o *DeleteTravelByIDNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
-
-	rw.Header().Del(runtime.HeaderContentType) //Remove Content-Type on empty responses
-
-	rw.WriteHeader(404)
+	rw.WriteHeader(o._statusCode)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
 }

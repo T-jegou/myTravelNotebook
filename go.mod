@@ -11,7 +11,7 @@ require (
 	github.com/go-openapi/swag v0.22.0
 	github.com/go-openapi/validate v0.22.0
 	github.com/jessevdk/go-flags v1.5.0
-	golang.org/x/net v0.0.0-20220809012201-f428fae20770
+	golang.org/x/net v0.0.0-20220809184613-07c6da5e1ced
 	gorm.io/gorm v1.23.8
 )
 
@@ -30,7 +30,7 @@ require (
 	github.com/jackc/pgx/v4 v4.17.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/lib/pq v1.10.2 // indirect
+	github.com/lib/pq v1.10.6 // indirect
 	github.com/mattn/go-shellwords v1.0.12 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
