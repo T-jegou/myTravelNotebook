@@ -1,41 +1,63 @@
 swagger: '2.0'
 info:
   description: >
-    MyTravelBook is an application aim to provide a simple way to create a
-    booktrip.
+    "MyTravelBook is an application aim to provide a simple way to create and
+    store your vacation stories." 
   title: MyTravelBook
   version: 1.0.0
 x-tagGroups:
   - name: MyTravelBook management
-    tags:
-      - travel
+tags:
+  - name: travel
+    description: Everything about travel
+  - name: health
+    description: Health status of MyTravelBook
 consumes:
   - application/json
 produces:
   - application/json
 schemes:
   - http
-basePath: /api/v1
+basePath: /mytravelbook
 paths:
-  /travel:
+  /health:
+    get:
+      tags:
+        - health
+      operationId: getHealth
+      description: Check if MyTravelBook is healthy
+      responses:
+        '200':
+          description: status of health check
+          schema:
+            $ref: '#/definitions/health'
+        default:
+          description: generic error response
+          schema:
+            $ref: '#/definitions/error'
+  /travels:
     get:
       tags:
         - travel
-      summary: Returns a list of travels.
-      description: ''
+      summary: Returns an array of travels object.
       operationId: getTravels
       produces:
         - application/json
       responses:
         '200':
-          description: OK
+          description: list all the travels
           schema:
-            $ref: '#/definitions/Travel'
+            type: array
+            items:
+              $ref: '#/definitions/travel'
+        default:
+          description: generic error response
+          schema:
+            $ref: '#/definitions/error'
     post:
       tags:
         - travel
       summary: Add a new travel to the shelf
-      description: ''
       operationId: addTravel
       consumes:
         - application/json
@@ -43,116 +65,161 @@ paths:
         - application/json
       parameters:
         - in: body
-          name: nameTravel
-          description: Travel object that need to be added to the shelf
+          name: body
+          description: Create a travel object
           required: true
           schema:
-            $ref: '#/definitions/Travel'
+            $ref: '#/definitions/createTravelRequest'
       responses:
         '200':
-          description: Succesful operation
-        '405':
-          description: Invalid input
-  /travel/{id}:
+          description: returns the created travel
+          schema:
+            $ref: '#/definitions/travel'
+        default:
+          description: generic error response
+          schema:
+            $ref: '#/definitions/error'
+  /travel/{travelId}:
     get:
       tags:
         - travel
       summary: Find travel by ID
-      description: Returns a single travel
       operationId: getTravelById
       produces:
         - application/json
       parameters:
-        - name: id
-          in: path
-          description: id's travel to be retrieve
+        - in: path
+          name: travelId
+          description: id travel to be retrieve
           required: true
           type: integer
           format: int64
+          minimum: 1
       responses:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/Travel'
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: Travel not found
+            $ref: '#/definitions/travel'
+        default:
+          description: generic error response
+          schema:
+            $ref: '#/definitions/error'
     put:
       tags:
         - travel
       summary: Update an existing travel by ID
-      description: ''
       operationId: updateTravelById
-      consumes:
-        - application/json
-      produces:
-        - application/json
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: travelId
           description: id's travel that need to be updated
           required: true
           type: integer
+          format: int64
         - in: body
           name: body
           description: Updated user object
           required: true
           schema:
-            $ref: '#/definitions/Travel'
+            $ref: '#/definitions/updateTravelRequest'
       responses:
         '200':
-          description: Travel succesfully updated
-        '400':
-          description: Invalid Travel supplied
-        '404':
-          description: User not found
+          description: return the updateted travel
+          schema:
+            $ref: '#/definitions/travel'
+        default:
+          description: generic error response
+          schema:
+            $ref: '#/definitions/error'
     delete:
       tags:
         - travel
       summary: Delete an existing travel using his Id
-      description: ''
       operationId: deleteTravelById
-      produces:
-        - application/json
       parameters:
-        - name: id
-          in: path
-          description: id's travel to delete
+        - in: path
+          name: travelId
+          description: numeric ID of the flag
           required: true
           type: integer
           format: int64
       responses:
         '200':
           description: Travel successfuly deleted
-        '400':
-          description: Invalid ID supplied
-        '404':
-          description: Travel not found
+        default:
+          description: generic error response
+          schema:
+            $ref: '#/definitions/error'
 definitions:
-  Travel:
+  error:
     type: object
     required:
-      - id
+      - message
+    properties:
+      message:
+        type: string
+        minLength: 1
+  health:
+    type: object
+    properties:
+      status:
+        type: string
+  travel:
+    type: object
+    required:
+      - name
+      - country
+      - description
     properties:
       id:
         type: integer
         format: int64
-        example: 10
-      nameTravel:
+        minimum: 1
+      name:
         type: string
         description: Name of your trip
-        example: 10 days in Poland
+        minLength: 1
+      country:
+        type: string
+        minLength: 1
+      description:
+        type: string
+        minLength: 1
       creationDate:
         type: string
         format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+  createTravelRequest:
+    type: object
+    required:
+      - name
+      - country
+      - description
+    properties:
+      name:
+        type: string
+        minLength: 1
       country:
         type: string
-        description: Country of the travel
-        example: Lithuania
-      descriptionTravel:
+        minLength: 1
+      description:
         type: string
-        description: Notes and resume of your trip !
-        example: >-
-          I visit Cracovie, Katowice and Warsaw, but to be honest my favorite
-          city was Gdansk
+        minLength: 1
+  updateTravelRequest:
+    type: object
+    required:
+      - name
+      - country
+      - description
+    properties:
+      name:
+        type: string
+        minLength: 1
+      country:
+        type: string
+        minLength: 1
+      description:
+        type: string
+        minLength: 1

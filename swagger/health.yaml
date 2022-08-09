@@ -1,0 +1,14 @@
+get:
+  tags:
+    - health
+  operationId: getHealth
+  description: Check if MyTravelBook is healthy
+  responses:
+    200:
+      description: status of health check
+      schema:
+        $ref: "#/definitions/health"
+    default:
+      description: generic error response
+      schema:
+        $ref: "#/definitions/error"

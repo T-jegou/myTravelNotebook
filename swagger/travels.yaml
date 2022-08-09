@@ -1,22 +1,26 @@
 get:
   tags:
     - "travel"
-  summary: "Returns a list of travels." 
-  description: ""
-  operationId: "getTravels" 
+  summary: "Returns an array of travels object." 
+  operationId: "getTravels"
   produces:
-    - application/json
+  - "application/json"
   responses:
-    200:
-      description: OK
+    "200":
+      description: "list all the travels"
       schema:
-        $ref: "#/definitions/Travel"
+        type: "array"
+        items:
+          $ref: "#/definitions/travel"
+    default:
+      description: "generic error response"
+      schema:
+        $ref: "#/definitions/error"
 
 post:
   tags:
   - "travel"
   summary: "Add a new travel to the shelf"
-  description: ""
   operationId: "addTravel"
   consumes:
   - "application/json"
@@ -24,13 +28,17 @@ post:
   - "application/json"
   parameters:
   - in: "body"
-    name: "nameTravel"
-    description: "Travel object that need to be added to the shelf"
+    name: "body"
+    description: "Create a travel object"
     required: true
     schema:
-      $ref: "#/definitions/Travel"
+      $ref: "#/definitions/createTravelRequest"
   responses:
-    200:
-      description: "Succesful operation"
-    405:
-      description: "Invalid input"
+    "200":
+      description: "returns the created travel"
+      schema:
+        $ref: "#/definitions/travel"
+    default:
+      description: "generic error response"
+      schema:
+        $ref: "#/definitions/error"
