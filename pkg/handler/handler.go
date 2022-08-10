@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations"
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/health"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/travel"
 )
 
@@ -20,4 +21,8 @@ func setupCRUD(api *operations.MyTravelBookAPI) {
 	api.TravelGetTravelByIDHandler = travel.GetTravelByIDHandlerFunc(c.GetTravel)
 	api.TravelDeleteTravelByIDHandler = travel.DeleteTravelByIDHandlerFunc(c.DeleteTravel)
 	api.TravelUpdateTravelByIDHandler = travel.UpdateTravelByIDHandlerFunc(c.UpdateTravel)
+
+	// Health
+	api.HealthGetHealthHandler = health.GetHealthHandlerFunc(c.GetHealth)
+
 }
