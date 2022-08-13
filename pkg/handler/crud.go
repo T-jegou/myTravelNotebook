@@ -38,7 +38,7 @@ func (c *crud) GetTravel(params travel.GetTravelByIDParams) middleware.Responder
 
 	if result.RecordNotFound() {
 		return travel.NewGetTravelByIDDefault(404).WithPayload(
-			ErrorMessage("unable to find flag %v in the database", params.TravelID))
+			ErrorMessage("unable to find travel %v in the database", params.TravelID))
 	}
 
 	if err := result.Error; err != nil {
@@ -50,7 +50,7 @@ func (c *crud) GetTravel(params travel.GetTravelByIDParams) middleware.Responder
 	payload, err := mapper.MapTravel(t)
 	if err != nil {
 		return travel.NewGetTravelByIDDefault(500).WithPayload(
-			ErrorMessage("cannot map travel %v. %s", params.TravelID, err))
+			ErrorMessage("Cannot map travel %v. %s", params.TravelID, err))
 	}
 	resp.SetPayload(payload)
 	return resp
@@ -67,16 +67,16 @@ func (c *crud) UpdateTravel(params travel.UpdateTravelByIDParams) middleware.Res
 
 // travels
 func (c *crud) GetTravels(params travel.GetTravelsParams) middleware.Responder {
-	dbInstance := entity.GetDB()
-	travel := entity.Travel{NameTravel: "Quelques jours en normandie", Country: "France", Description: "Blah blah blah"}
-
-	result := dbInstance.Create(&travel)
-	fmt.Print(result.Error, travel.ID)
 	return nil
 }
 
 func (c *crud) AddTravel(params travel.AddTravelParams) middleware.Responder {
 	println("Add travel")
+	dbInstance := entity.GetDB()
+	travel := entity.Travel{NameTravel: "Escapade solitaire A Cracovie", Country: "Pologne", Description: "Blah blah blah"}
+
+	result := dbInstance.Create(&travel)
+	fmt.Print(result.Error, travel.ID)
 
 	return nil
 }
