@@ -28,7 +28,7 @@ go get -u -f ./swagger_gen/...
 
 ## Run API
 
-Once the documentation has been generated and the API correctly via the swagger description, we can launch the API
+Once the documentation has been generated the API via the swagger description, we can launch the it
 
 ```sh
 go run swagger_gen/cmd/my-travel-notebook-server/main.go --port 55600
