@@ -12,6 +12,10 @@ tags:
     description: Everything about travel
   - name: health
     description: Health status of MyTravelBook
+  - name: login
+    description: Login through oauth2 server
+  - name: authentication
+    description: Management access token
 consumes:
   - application/json
 produces:
@@ -19,6 +23,15 @@ produces:
 schemes:
   - http
 basePath: /mytravelbook
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: https://accounts.google.com/o/oauth2/v2/auth
+    tokenUrl: https://www.googleapis.com/oauth2/v4/token
+    scopes:
+      admin: Admin scope
+      user: User scope
 paths:
   /health:
     get:
@@ -150,6 +163,42 @@ paths:
           description: generic error response
           schema:
             $ref: '#/definitions/error'
+  /login:
+    get:
+      tags:
+        - login
+      summary: login through oauth2 server
+      security: []
+      responses:
+        '200':
+          description: login
+          schema:
+            properties:
+              access_token:
+                type: string
+                format: string
+        default:
+          description: error
+          schema:
+            $ref: '#/definitions/error'
+  /auth/callback:
+    get:
+      tags:
+        - authentication
+      summary: return access_token
+      security: []
+      responses:
+        '200':
+          description: login
+          schema:
+            properties:
+              access_token:
+                type: string
+                format: string
+        default:
+          description: error
+          schema:
+            $ref: '#/definitions/error'
 definitions:
   error:
     type: object
@@ -223,3 +272,5 @@ definitions:
       description:
         type: string
         minLength: 1
+  principal:
+    type: string
