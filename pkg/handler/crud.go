@@ -5,12 +5,20 @@ import (
 
 	"github.com/T-jegou/myTravelNotebook/pkg/entity"
 	"github.com/T-jegou/myTravelNotebook/pkg/mapper"
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/authentication"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/health"
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/login"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/travel"
 	"github.com/go-openapi/runtime/middleware"
 )
 
 type CRUD interface {
+	// Login
+	GetLogin(login.GetLoginParams) middleware.Responder
+
+	// Authentication
+	GetAuthCallback(authentication.GetAuthCallbackParams) middleware.Responder
+
 	// travels
 	AddTravel(travel.AddTravelParams) middleware.Responder
 	GetTravels(travel.GetTravelsParams) middleware.Responder
@@ -30,6 +38,17 @@ func NewCRUD() CRUD {
 }
 
 type crud struct{}
+
+// login
+func (c *crud) GetLogin(params login.GetLoginParams) middleware.Responder {
+	return nil
+}
+
+// authentication
+func (c *crud) GetAuthCallback(params authentication.GetAuthCallbackParams) middleware.Responder {
+	return nil
+
+}
 
 // travel
 func (c *crud) GetTravel(params travel.GetTravelByIDParams) middleware.Responder {

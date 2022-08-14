@@ -14,7 +14,7 @@ import (
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations"
 )
 
-//go:generate swagger generate server --target ../../swagger_gen --name MyTravelBook --spec ../../docs/api_docs/bundle.yaml --principal interface{}
+//go:generate swagger generate server --target ../../swagger_gen --name MyTravelBook --spec ../../docs/api_docs/bundle.yaml --principal models.Principal
 
 func configureFlags(api *operations.MyTravelBookAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }

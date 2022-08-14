@@ -2,7 +2,9 @@ package handler
 
 import (
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations"
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/authentication"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/health"
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/login"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/travel"
 )
 
@@ -24,5 +26,11 @@ func setupCRUD(api *operations.MyTravelBookAPI) {
 
 	// Health
 	api.HealthGetHealthHandler = health.GetHealthHandlerFunc(c.GetHealth)
+
+	// Login
+	api.LoginGetLoginHandler = login.GetLoginHandlerFunc(c.GetLogin)
+
+	// Authentication
+	api.AuthenticationGetAuthCallbackHandler = authentication.GetAuthCallbackHandlerFunc(c.GetAuthCallback)
 
 }

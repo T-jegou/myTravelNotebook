@@ -19,7 +19,9 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/authentication"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/health"
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/login"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/travel"
 )
 
@@ -45,6 +47,12 @@ func NewMyTravelBookAPI(spec *loads.Document) *MyTravelBookAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
+		AuthenticationGetAuthCallbackHandler: authentication.GetAuthCallbackHandlerFunc(func(params authentication.GetAuthCallbackParams) middleware.Responder {
+			return middleware.NotImplemented("operation authentication.GetAuthCallback has not yet been implemented")
+		}),
+		LoginGetLoginHandler: login.GetLoginHandlerFunc(func(params login.GetLoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation login.GetLogin has not yet been implemented")
+		}),
 		TravelAddTravelHandler: travel.AddTravelHandlerFunc(func(params travel.AddTravelParams) middleware.Responder {
 			return middleware.NotImplemented("operation travel.AddTravel has not yet been implemented")
 		}),
@@ -100,6 +108,10 @@ type MyTravelBookAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
+	// AuthenticationGetAuthCallbackHandler sets the operation handler for the get auth callback operation
+	AuthenticationGetAuthCallbackHandler authentication.GetAuthCallbackHandler
+	// LoginGetLoginHandler sets the operation handler for the get login operation
+	LoginGetLoginHandler login.GetLoginHandler
 	// TravelAddTravelHandler sets the operation handler for the add travel operation
 	TravelAddTravelHandler travel.AddTravelHandler
 	// TravelDeleteTravelByIDHandler sets the operation handler for the delete travel by Id operation
@@ -189,6 +201,12 @@ func (o *MyTravelBookAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
+	if o.AuthenticationGetAuthCallbackHandler == nil {
+		unregistered = append(unregistered, "authentication.GetAuthCallbackHandler")
+	}
+	if o.LoginGetLoginHandler == nil {
+		unregistered = append(unregistered, "login.GetLoginHandler")
+	}
 	if o.TravelAddTravelHandler == nil {
 		unregistered = append(unregistered, "travel.AddTravelHandler")
 	}
@@ -295,6 +313,14 @@ func (o *MyTravelBookAPI) initHandlerCache() {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/auth/callback"] = authentication.NewGetAuthCallback(o.context, o.AuthenticationGetAuthCallbackHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/login"] = login.NewGetLogin(o.context, o.LoginGetLoginHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
