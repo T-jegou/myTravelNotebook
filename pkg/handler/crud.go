@@ -5,11 +5,13 @@ import (
 
 	"github.com/T-jegou/myTravelNotebook/pkg/entity"
 	"github.com/T-jegou/myTravelNotebook/pkg/mapper"
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/models"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/authentication"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/health"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/login"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/travel"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/sirupsen/logrus"
 )
 
 type CRUD interface {
@@ -20,16 +22,16 @@ type CRUD interface {
 	GetAuthCallback(authentication.GetAuthCallbackParams) middleware.Responder
 
 	// travels
-	AddTravel(travel.AddTravelParams) middleware.Responder
-	GetTravels(travel.GetTravelsParams) middleware.Responder
+	AddTravel(travel.AddTravelParams, *models.Principal) middleware.Responder
+	GetTravels(travel.GetTravelsParams, *models.Principal) middleware.Responder
 
 	// travel
-	GetTravel(travel.GetTravelByIDParams) middleware.Responder
-	DeleteTravel(travel.DeleteTravelByIDParams) middleware.Responder
-	UpdateTravel(travel.UpdateTravelByIDParams) middleware.Responder
+	GetTravel(travel.GetTravelByIDParams, *models.Principal) middleware.Responder
+	DeleteTravel(travel.DeleteTravelByIDParams, *models.Principal) middleware.Responder
+	UpdateTravel(travel.UpdateTravelByIDParams, *models.Principal) middleware.Responder
 
 	// Health
-	GetHealth(health.GetHealthParams) middleware.Responder
+	GetHealth(health.GetHealthParams, *models.Principal) middleware.Responder
 }
 
 // NewCRUD creates a new CRUD instance
@@ -41,17 +43,22 @@ type crud struct{}
 
 // login
 func (c *crud) GetLogin(params login.GetLoginParams) middleware.Responder {
-	return nil
+	return Login(params.HTTPRequest)
 }
 
 // authentication
 func (c *crud) GetAuthCallback(params authentication.GetAuthCallbackParams) middleware.Responder {
-	return nil
-
+	token, err := Callback(params.HTTPRequest)
+	if err != nil {
+		return middleware.NotImplemented("operation .GetAuthCallback error")
+	}
+	logrus.Println("Token", token)
+	return authentication.NewGetAuthCallbackDefault(500).WithPayload(
+		ErrorMessage("Token %v", token))
 }
 
 // travel
-func (c *crud) GetTravel(params travel.GetTravelByIDParams) middleware.Responder {
+func (c *crud) GetTravel(params travel.GetTravelByIDParams, principal *models.Principal) middleware.Responder {
 	t := &entity.Travel{}
 	result := entity.GetDB().First(t, params.TravelID)
 
@@ -76,20 +83,20 @@ func (c *crud) GetTravel(params travel.GetTravelByIDParams) middleware.Responder
 
 }
 
-func (c *crud) DeleteTravel(params travel.DeleteTravelByIDParams) middleware.Responder {
+func (c *crud) DeleteTravel(params travel.DeleteTravelByIDParams, principal *models.Principal) middleware.Responder {
 	return nil
 }
 
-func (c *crud) UpdateTravel(params travel.UpdateTravelByIDParams) middleware.Responder {
+func (c *crud) UpdateTravel(params travel.UpdateTravelByIDParams, principal *models.Principal) middleware.Responder {
 	return nil
 }
 
 // travels
-func (c *crud) GetTravels(params travel.GetTravelsParams) middleware.Responder {
+func (c *crud) GetTravels(params travel.GetTravelsParams, principal *models.Principal) middleware.Responder {
 	return nil
 }
 
-func (c *crud) AddTravel(params travel.AddTravelParams) middleware.Responder {
+func (c *crud) AddTravel(params travel.AddTravelParams, principal *models.Principal) middleware.Responder {
 	println("Add travel")
 	dbInstance := entity.GetDB()
 	travel := entity.Travel{NameTravel: "Escapade solitaire A Cracovie", Country: "Pologne", Description: "Blah blah blah"}
@@ -101,7 +108,7 @@ func (c *crud) AddTravel(params travel.AddTravelParams) middleware.Responder {
 }
 
 // Health
-func (c *crud) GetHealth(params health.GetHealthParams) middleware.Responder {
+func (c *crud) GetHealth(params health.GetHealthParams, principal *models.Principal) middleware.Responder {
 	println("Get health")
 
 	return nil

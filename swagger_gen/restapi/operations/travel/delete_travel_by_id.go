@@ -9,19 +9,21 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/runtime/middleware"
+
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/models"
 )
 
 // DeleteTravelByIDHandlerFunc turns a function with the right signature into a delete travel by Id handler
-type DeleteTravelByIDHandlerFunc func(DeleteTravelByIDParams) middleware.Responder
+type DeleteTravelByIDHandlerFunc func(DeleteTravelByIDParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn DeleteTravelByIDHandlerFunc) Handle(params DeleteTravelByIDParams) middleware.Responder {
-	return fn(params)
+func (fn DeleteTravelByIDHandlerFunc) Handle(params DeleteTravelByIDParams, principal *models.Principal) middleware.Responder {
+	return fn(params, principal)
 }
 
 // DeleteTravelByIDHandler interface for that can handle valid delete travel by Id params
 type DeleteTravelByIDHandler interface {
-	Handle(DeleteTravelByIDParams) middleware.Responder
+	Handle(DeleteTravelByIDParams, *models.Principal) middleware.Responder
 }
 
 // NewDeleteTravelByID creates a new http.Handler for the delete travel by Id operation
@@ -45,12 +47,25 @@ func (o *DeleteTravelByID) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		*r = *rCtx
 	}
 	var Params = NewDeleteTravelByIDParams()
+	uprinc, aCtx, err := o.Context.Authorize(r, route)
+	if err != nil {
+		o.Context.Respond(rw, r, route.Produces, route, err)
+		return
+	}
+	if aCtx != nil {
+		*r = *aCtx
+	}
+	var principal *models.Principal
+	if uprinc != nil {
+		principal = uprinc.(*models.Principal) // this is really a models.Principal, I promise
+	}
+
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	res := o.Handler.Handle(Params, principal) // actually handle the request
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

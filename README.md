@@ -22,7 +22,7 @@ MyTravelBook require :
 ```sh
 swagger-merger -i swagger/index.yaml -o docs/api_docs/bundle.yaml
 swagger validate docs/api_docs/bundle.yaml 
-swagger generate server -A myTravelBook -t ./swagger_gen -f docs/api_docs/bundle.yaml
+swagger generate server -A myTravelBook -P models.Principal -t ./swagger_gen -f docs/api_docs/bundle.yaml
 go get -u -f ./swagger_gen/... 
 ```
 

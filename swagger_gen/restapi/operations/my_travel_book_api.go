@@ -19,6 +19,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/models"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/authentication"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/health"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/login"
@@ -53,24 +54,30 @@ func NewMyTravelBookAPI(spec *loads.Document) *MyTravelBookAPI {
 		LoginGetLoginHandler: login.GetLoginHandlerFunc(func(params login.GetLoginParams) middleware.Responder {
 			return middleware.NotImplemented("operation login.GetLogin has not yet been implemented")
 		}),
-		TravelAddTravelHandler: travel.AddTravelHandlerFunc(func(params travel.AddTravelParams) middleware.Responder {
+		TravelAddTravelHandler: travel.AddTravelHandlerFunc(func(params travel.AddTravelParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation travel.AddTravel has not yet been implemented")
 		}),
-		TravelDeleteTravelByIDHandler: travel.DeleteTravelByIDHandlerFunc(func(params travel.DeleteTravelByIDParams) middleware.Responder {
+		TravelDeleteTravelByIDHandler: travel.DeleteTravelByIDHandlerFunc(func(params travel.DeleteTravelByIDParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation travel.DeleteTravelByID has not yet been implemented")
 		}),
-		HealthGetHealthHandler: health.GetHealthHandlerFunc(func(params health.GetHealthParams) middleware.Responder {
+		HealthGetHealthHandler: health.GetHealthHandlerFunc(func(params health.GetHealthParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation health.GetHealth has not yet been implemented")
 		}),
-		TravelGetTravelByIDHandler: travel.GetTravelByIDHandlerFunc(func(params travel.GetTravelByIDParams) middleware.Responder {
+		TravelGetTravelByIDHandler: travel.GetTravelByIDHandlerFunc(func(params travel.GetTravelByIDParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation travel.GetTravelByID has not yet been implemented")
 		}),
-		TravelGetTravelsHandler: travel.GetTravelsHandlerFunc(func(params travel.GetTravelsParams) middleware.Responder {
+		TravelGetTravelsHandler: travel.GetTravelsHandlerFunc(func(params travel.GetTravelsParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation travel.GetTravels has not yet been implemented")
 		}),
-		TravelUpdateTravelByIDHandler: travel.UpdateTravelByIDHandlerFunc(func(params travel.UpdateTravelByIDParams) middleware.Responder {
+		TravelUpdateTravelByIDHandler: travel.UpdateTravelByIDHandlerFunc(func(params travel.UpdateTravelByIDParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation travel.UpdateTravelByID has not yet been implemented")
 		}),
+
+		OauthSecurityAuth: func(token string, scopes []string) (*models.Principal, error) {
+			return nil, errors.NotImplemented("oauth2 bearer auth (OauthSecurity) has not yet been implemented")
+		},
+		// default authorizer is authorized meaning no requests are blocked
+		APIAuthorizer: security.Authorized(),
 	}
 }
 
@@ -107,6 +114,13 @@ type MyTravelBookAPI struct {
 	// JSONProducer registers a producer for the following mime types:
 	//   - application/json
 	JSONProducer runtime.Producer
+
+	// OauthSecurityAuth registers a function that takes an access token and a collection of required scopes and returns a principal
+	// it performs authentication based on an oauth2 bearer token provided in the request
+	OauthSecurityAuth func(string, []string) (*models.Principal, error)
+
+	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
+	APIAuthorizer runtime.Authorizer
 
 	// AuthenticationGetAuthCallbackHandler sets the operation handler for the get auth callback operation
 	AuthenticationGetAuthCallbackHandler authentication.GetAuthCallbackHandler
@@ -201,6 +215,10 @@ func (o *MyTravelBookAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
+	if o.OauthSecurityAuth == nil {
+		unregistered = append(unregistered, "OauthSecurityAuth")
+	}
+
 	if o.AuthenticationGetAuthCallbackHandler == nil {
 		unregistered = append(unregistered, "authentication.GetAuthCallbackHandler")
 	}
@@ -240,12 +258,22 @@ func (o *MyTravelBookAPI) ServeErrorFor(operationID string) func(http.ResponseWr
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
 func (o *MyTravelBookAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
-	return nil
+	result := make(map[string]runtime.Authenticator)
+	for name := range schemes {
+		switch name {
+		case "OauthSecurity":
+			result[name] = o.BearerAuthenticator(name, func(token string, scopes []string) (interface{}, error) {
+				return o.OauthSecurityAuth(token, scopes)
+			})
+
+		}
+	}
+	return result
 }
 
 // Authorizer returns the registered authorizer
 func (o *MyTravelBookAPI) Authorizer() runtime.Authorizer {
-	return nil
+	return o.APIAuthorizer
 }
 
 // ConsumersFor gets the consumers for the specified media types.

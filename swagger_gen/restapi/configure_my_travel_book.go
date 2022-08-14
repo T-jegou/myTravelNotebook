@@ -9,6 +9,7 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/sirupsen/logrus"
+	"golang.org/x/net/context"
 
 	"github.com/T-jegou/myTravelNotebook/pkg/handler"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations"
@@ -24,13 +25,20 @@ func configureAPI(api *operations.MyTravelBookAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
+	// Set your custom logger if needed. Default one is log.Printf
+	// Expected interface func(string, ...interface{})
+	//
+	// Example:
+	// api.Logger = log.Printf
+	api.Logger = logrus.Infof
+
 	api.UseSwaggerUI()
+	// To continue using redoc as your UI, uncomment the following line
+	// api.UseRedoc()
 
 	api.JSONConsumer = runtime.JSONConsumer()
-	api.JSONProducer = runtime.JSONProducer()
 
-	// Add logger -> logrus
-	api.Logger = logrus.Infof
+	api.JSONProducer = runtime.JSONProducer()
 
 	api.PreServerShutdown = func() {}
 	api.ServerShutdown = func() {}
@@ -52,10 +60,21 @@ func configureTLS(tlsConfig *tls.Config) {
 func configureServer(s *http.Server, scheme, addr string) {
 }
 
+type customContextKey int8
+
+const (
+	_ customContextKey = iota
+	ctxResponseWriter
+)
+
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.
 // The middleware executes after routing but before authentication, binding and validation.
 func setupMiddlewares(handler http.Handler) http.Handler {
-	return handler
+	ourFunc := func(w http.ResponseWriter, r *http.Request) {
+		rctx := context.WithValue(r.Context(), ctxResponseWriter, w)
+		handler.ServeHTTP(w, r.WithContext(rctx))
+	}
+	return http.HandlerFunc(ourFunc)
 }
 
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.

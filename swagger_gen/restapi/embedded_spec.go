@@ -404,6 +404,13 @@ func init() {
       }
     }
   },
+  "security": [
+    {
+      "OauthSecurity": [
+        "user"
+      ]
+    }
+  ],
   "tags": [
     {
       "description": "Everything about travel",
@@ -815,6 +822,13 @@ func init() {
       }
     }
   },
+  "security": [
+    {
+      "OauthSecurity": [
+        "user"
+      ]
+    }
+  ],
   "tags": [
     {
       "description": "Everything about travel",

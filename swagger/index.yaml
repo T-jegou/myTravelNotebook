@@ -34,6 +34,10 @@ securityDefinitions:
       admin: Admin scope
       user: User scope
 
+security:
+  - OauthSecurity:
+    - user
+
 paths:
   /health:
     $ref: "./health.yaml"
