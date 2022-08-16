@@ -9,19 +9,18 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/sirupsen/logrus"
-	"golang.org/x/net/context"
 
 	"github.com/T-jegou/myTravelNotebook/pkg/handler"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations"
 )
 
-//go:generate swagger generate server --target ../../swagger_gen --name MyTravelBook --spec ../../docs/api_docs/bundle.yaml --principal models.Principal
+//go:generate swagger generate server --target ../../swagger_gen --name MyTravelNotebook --spec ../../docs/api_docs/bundle.yaml --principal models.Principal
 
-func configureFlags(api *operations.MyTravelBookAPI) {
+func configureFlags(api *operations.MyTravelNotebookAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.MyTravelBookAPI) http.Handler {
+func configureAPI(api *operations.MyTravelNotebookAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
@@ -60,21 +59,10 @@ func configureTLS(tlsConfig *tls.Config) {
 func configureServer(s *http.Server, scheme, addr string) {
 }
 
-type customContextKey int8
-
-const (
-	_ customContextKey = iota
-	ctxResponseWriter
-)
-
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.
 // The middleware executes after routing but before authentication, binding and validation.
 func setupMiddlewares(handler http.Handler) http.Handler {
-	ourFunc := func(w http.ResponseWriter, r *http.Request) {
-		rctx := context.WithValue(r.Context(), ctxResponseWriter, w)
-		handler.ServeHTTP(w, r.WithContext(rctx))
-	}
-	return http.HandlerFunc(ourFunc)
+	return handler
 }
 
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.

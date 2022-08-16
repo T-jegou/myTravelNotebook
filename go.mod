@@ -3,15 +3,15 @@ module github.com/T-jegou/myTravelNotebook
 go 1.18
 
 require (
-	github.com/go-openapi/errors v0.20.2
-	github.com/go-openapi/loads v0.21.1
+	github.com/go-openapi/errors v0.20.3
+	github.com/go-openapi/loads v0.21.2
 	github.com/go-openapi/runtime v0.24.1
-	github.com/go-openapi/spec v0.20.6
+	github.com/go-openapi/spec v0.20.7
 	github.com/go-openapi/strfmt v0.21.3
-	github.com/go-openapi/swag v0.22.0
+	github.com/go-openapi/swag v0.22.1
 	github.com/go-openapi/validate v0.22.0
 	github.com/jessevdk/go-flags v1.5.0
-	golang.org/x/net v0.0.0-20220809184613-07c6da5e1ced
+	golang.org/x/net v0.0.0-20220812174116-3211cb980234
 	gorm.io/gorm v1.23.8
 )
 
@@ -63,7 +63,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cast v1.5.0
 	go.mongodb.org/mongo-driver v1.10.1 // indirect
-	golang.org/x/sys v0.0.0-20220808155132-1c4a2a72c664 // indirect
+	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gorm.io/driver/postgres v1.3.8
 )

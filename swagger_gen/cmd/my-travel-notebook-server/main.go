@@ -23,7 +23,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	api := operations.NewMyTravelBookAPI(swaggerSpec)
+	api := operations.NewMyTravelNotebookAPI(swaggerSpec)
 	server := restapi.NewServer(api)
 	defer server.Shutdown()
 

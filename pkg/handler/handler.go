@@ -11,12 +11,12 @@ import (
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/travel"
 )
 
-func Setup(api *operations.MyTravelBookAPI) {
+func Setup(api *operations.MyTravelNotebookAPI) {
 	setupCRUD(api)
 	setupAuthent(api)
 }
 
-func setupAuthent(api *operations.MyTravelBookAPI) {
+func setupAuthent(api *operations.MyTravelNotebookAPI) {
 	api.OauthSecurityAuth = func(token string, scopes []string) (*models.Principal, error) {
 		ok, err := authenticated(token)
 		if err != nil {
@@ -31,7 +31,7 @@ func setupAuthent(api *operations.MyTravelBookAPI) {
 	}
 }
 
-func setupCRUD(api *operations.MyTravelBookAPI) {
+func setupCRUD(api *operations.MyTravelNotebookAPI) {
 	c := NewCRUD()
 
 	// Travels

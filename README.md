@@ -1,7 +1,7 @@
-# MyTravelBook
+# MyTravelNotebook
 ## _Write, Store and share your vacation stories_
 
-MyTravelBook is a side-project based on a simple idea, design from scrath an API with go and go-swagger aim to understand the fundamentals of Rest principles and some extra tools to create a complete backend solution.
+MyTravelNotebook is a side-project based on a simple idea, design from scrath an API with go and go-swagger aim to understand the fundamentals of Rest principles and some extra tools to create a complete backend solution.
 
 In order to challenge myself by adding some complexity but meanwhile create a better fault-tolerant tool, I decided to add an ORM (GORM), a logger (logrus), a http middleware (negroni) and some other cools stuff to to increase skills in Golang ecosysteme.
 
@@ -13,7 +13,7 @@ In order to challenge myself by adding some complexity but meanwhile create a be
 
 CRUD
 ## Generate docs and server
-MyTravelBook require :
+MyTravelNotebook require :
 - swagger-merger
 - go-swagger
 - go 1.14>
@@ -22,7 +22,7 @@ MyTravelBook require :
 ```sh
 swagger-merger -i swagger/index.yaml -o docs/api_docs/bundle.yaml
 swagger validate docs/api_docs/bundle.yaml 
-swagger generate server -A myTravelBook -P models.Principal -t ./swagger_gen -f docs/api_docs/bundle.yaml
+swagger generate server -A myTravelNotebook -P models.Principal -t ./swagger_gen -f docs/api_docs/bundle.yaml
 go get -u -f ./swagger_gen/... 
 ```
 
