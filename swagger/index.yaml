@@ -22,7 +22,7 @@ produces:
 - "application/json"
 schemes:
 - "http"
-basePath: "/mytravelbook"
+basePath: "/api/v1"
 
 securityDefinitions:
   OauthSecurity:
