@@ -33,7 +33,7 @@ func init() {
     "title": "MyTravelBook",
     "version": "1.0.0"
   },
-  "basePath": "/mytravelbook",
+  "basePath": "/api/v1",
   "paths": {
     "/auth/callback": {
       "get": {
@@ -451,7 +451,7 @@ func init() {
     "title": "MyTravelBook",
     "version": "1.0.0"
   },
-  "basePath": "/mytravelbook",
+  "basePath": "/api/v1",
   "paths": {
     "/auth/callback": {
       "get": {
