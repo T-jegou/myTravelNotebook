@@ -12,13 +12,32 @@ tags:
     description: "Everything about travel"
   - name: "health"
     description: "Health status of MyTravelBook"
+  - name: "login"
+    description: "Login through oauth2 server"
+  - name: "authentication"
+    description: "Management access token"
 consumes:
 - "application/json"
 produces:
 - "application/json"
 schemes:
 - "http"
-basePath: "/mytravelbook"
+basePath: "/api/v1"
+
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth'
+    tokenUrl: 'https://www.googleapis.com/oauth2/v4/token'
+    scopes:
+      admin: Admin scope
+      user: User scope
+
+security:
+  - OauthSecurity:
+    - user
+
 paths:
   /health:
     $ref: "./health.yaml"
@@ -26,6 +45,10 @@ paths:
     $ref: "./travels.yaml"
   /travel/{travelId}:
     $ref: "./travel.yaml"
+  /login:
+    $ref: "./login.yaml"
+  /auth/callback:
+    $ref: "./authentication.yaml"
 
 
 definitions:
@@ -109,4 +132,7 @@ definitions:
       description:
         type: "string"
         minLength: 1
+
+  principal:
+    type: string 
 

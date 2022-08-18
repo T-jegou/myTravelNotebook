@@ -9,19 +9,21 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/runtime/middleware"
+
+	"github.com/T-jegou/myTravelNotebook/swagger_gen/models"
 )
 
 // GetHealthHandlerFunc turns a function with the right signature into a get health handler
-type GetHealthHandlerFunc func(GetHealthParams) middleware.Responder
+type GetHealthHandlerFunc func(GetHealthParams, *models.Principal) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetHealthHandlerFunc) Handle(params GetHealthParams) middleware.Responder {
-	return fn(params)
+func (fn GetHealthHandlerFunc) Handle(params GetHealthParams, principal *models.Principal) middleware.Responder {
+	return fn(params, principal)
 }
 
 // GetHealthHandler interface for that can handle valid get health params
 type GetHealthHandler interface {
-	Handle(GetHealthParams) middleware.Responder
+	Handle(GetHealthParams, *models.Principal) middleware.Responder
 }
 
 // NewGetHealth creates a new http.Handler for the get health operation
@@ -45,12 +47,25 @@ func (o *GetHealth) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		*r = *rCtx
 	}
 	var Params = NewGetHealthParams()
+	uprinc, aCtx, err := o.Context.Authorize(r, route)
+	if err != nil {
+		o.Context.Respond(rw, r, route.Produces, route, err)
+		return
+	}
+	if aCtx != nil {
+		*r = *aCtx
+	}
+	var principal *models.Principal
+	if uprinc != nil {
+		principal = uprinc.(*models.Principal) // this is really a models.Principal, I promise
+	}
+
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	res := o.Handler.Handle(Params, principal) // actually handle the request
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

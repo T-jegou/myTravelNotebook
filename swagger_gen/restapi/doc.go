@@ -7,7 +7,7 @@
 //  Schemes:
 //    http
 //  Host: localhost
-//  BasePath: /mytravelbook
+//  BasePath: /api/v1
 //  Version: 1.0.0
 //
 //  Consumes:

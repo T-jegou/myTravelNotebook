@@ -33,8 +33,36 @@ func init() {
     "title": "MyTravelBook",
     "version": "1.0.0"
   },
-  "basePath": "/mytravelbook",
+  "basePath": "/api/v1",
   "paths": {
+    "/auth/callback": {
+      "get": {
+        "security": [],
+        "tags": [
+          "authentication"
+        ],
+        "summary": "return access_token",
+        "responses": {
+          "200": {
+            "description": "login",
+            "schema": {
+              "properties": {
+                "access_token": {
+                  "type": "string",
+                  "format": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "description": "Check if MyTravelBook is healthy",
@@ -51,6 +79,34 @@ func init() {
           },
           "default": {
             "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "get": {
+        "security": [],
+        "tags": [
+          "login"
+        ],
+        "summary": "login through oauth2 server",
+        "responses": {
+          "200": {
+            "description": "login",
+            "schema": {
+              "properties": {
+                "access_token": {
+                  "type": "string",
+                  "format": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "error",
             "schema": {
               "$ref": "#/definitions/error"
             }
@@ -274,6 +330,9 @@ func init() {
         }
       }
     },
+    "principal": {
+      "type": "string"
+    },
     "travel": {
       "type": "object",
       "required": [
@@ -333,6 +392,25 @@ func init() {
       }
     }
   },
+  "securityDefinitions": {
+    "OauthSecurity": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+      "tokenUrl": "https://www.googleapis.com/oauth2/v4/token",
+      "scopes": {
+        "admin": "Admin scope",
+        "user": "User scope"
+      }
+    }
+  },
+  "security": [
+    {
+      "OauthSecurity": [
+        "user"
+      ]
+    }
+  ],
   "tags": [
     {
       "description": "Everything about travel",
@@ -341,6 +419,14 @@ func init() {
     {
       "description": "Health status of MyTravelBook",
       "name": "health"
+    },
+    {
+      "description": "Login through oauth2 server",
+      "name": "login"
+    },
+    {
+      "description": "Management access token",
+      "name": "authentication"
     }
   ],
   "x-tagGroups": [
@@ -365,8 +451,36 @@ func init() {
     "title": "MyTravelBook",
     "version": "1.0.0"
   },
-  "basePath": "/mytravelbook",
+  "basePath": "/api/v1",
   "paths": {
+    "/auth/callback": {
+      "get": {
+        "security": [],
+        "tags": [
+          "authentication"
+        ],
+        "summary": "return access_token",
+        "responses": {
+          "200": {
+            "description": "login",
+            "schema": {
+              "properties": {
+                "access_token": {
+                  "type": "string",
+                  "format": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "description": "Check if MyTravelBook is healthy",
@@ -383,6 +497,34 @@ func init() {
           },
           "default": {
             "description": "generic error response",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "get": {
+        "security": [],
+        "tags": [
+          "login"
+        ],
+        "summary": "login through oauth2 server",
+        "responses": {
+          "200": {
+            "description": "login",
+            "schema": {
+              "properties": {
+                "access_token": {
+                  "type": "string",
+                  "format": "string"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "error",
             "schema": {
               "$ref": "#/definitions/error"
             }
@@ -606,6 +748,9 @@ func init() {
         }
       }
     },
+    "principal": {
+      "type": "string"
+    },
     "travel": {
       "type": "object",
       "required": [
@@ -665,6 +810,25 @@ func init() {
       }
     }
   },
+  "securityDefinitions": {
+    "OauthSecurity": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+      "tokenUrl": "https://www.googleapis.com/oauth2/v4/token",
+      "scopes": {
+        "admin": "Admin scope",
+        "user": "User scope"
+      }
+    }
+  },
+  "security": [
+    {
+      "OauthSecurity": [
+        "user"
+      ]
+    }
+  ],
   "tags": [
     {
       "description": "Everything about travel",
@@ -673,6 +837,14 @@ func init() {
     {
       "description": "Health status of MyTravelBook",
       "name": "health"
+    },
+    {
+      "description": "Login through oauth2 server",
+      "name": "login"
+    },
+    {
+      "description": "Management access token",
+      "name": "authentication"
     }
   ],
   "x-tagGroups": [

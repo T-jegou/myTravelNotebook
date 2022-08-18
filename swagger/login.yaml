@@ -1,0 +1,17 @@
+get:
+  tags:
+      - "login"
+  summary: "login through oauth2 server"
+  security: []
+  responses:
+    "200":
+      description: "login"
+      schema:
+        properties:
+          access_token:
+            type: "string"
+            format: "string"
+    default:
+      description: "error"
+      schema:
+        $ref: "#/definitions/error"

@@ -14,23 +14,30 @@ import (
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations"
 )
 
-//go:generate swagger generate server --target ../../swagger_gen --name MyTravelBook --spec ../../docs/api_docs/bundle.yaml --principal interface{}
+//go:generate swagger generate server --target ../../swagger_gen --name MyTravelNotebook --spec ../../docs/api_docs/bundle.yaml --principal models.Principal
 
-func configureFlags(api *operations.MyTravelBookAPI) {
+func configureFlags(api *operations.MyTravelNotebookAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.MyTravelBookAPI) http.Handler {
+func configureAPI(api *operations.MyTravelNotebookAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
+	// Set your custom logger if needed. Default one is log.Printf
+	// Expected interface func(string, ...interface{})
+	//
+	// Example:
+	// api.Logger = log.Printf
+	api.Logger = logrus.Infof
+
 	api.UseSwaggerUI()
+	// To continue using redoc as your UI, uncomment the following line
+	// api.UseRedoc()
 
 	api.JSONConsumer = runtime.JSONConsumer()
-	api.JSONProducer = runtime.JSONProducer()
 
-	// Add logger -> logrus
-	api.Logger = logrus.Infof
+	api.JSONProducer = runtime.JSONProducer()
 
 	api.PreServerShutdown = func() {}
 	api.ServerShutdown = func() {}

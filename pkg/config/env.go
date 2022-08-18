@@ -22,4 +22,8 @@ var Config = struct {
 	// LogrusFormat sets the logrus logging formatter
 	// Possible values: text, json
 	LogrusFormat string `env:"FLAGR_LOGRUS_FORMAT" envDefault:"text"`
+
+	// 0auth Authent google
+	ClientID     string `env:"GOOGLE_CLIENT_ID" envDefault:"foobar"`
+	ClientSecret string `env:"GOOGLE_CLIENT_SECRET" envDefault:"foobar"`
 }{}
