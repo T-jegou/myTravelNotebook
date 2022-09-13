@@ -31,7 +31,8 @@ var (
 	userInfoURL = "https://www.googleapis.com/oauth2/v3/userinfo"
 
 	// our endpoint to be called back by the redirected client
-	callbackURL = "http://127.0.0.1:55600/mytravelbook/auth/callback"
+	// callbackURL = "http://127.0.0.1:55600/api/v1/auth/callback"
+	callbackURL = "http://127.0.0.1:8080/homepage"
 
 	// the description of the OAuth2 flow
 	endpoint = oauth2.Endpoint{
@@ -86,6 +87,7 @@ func Callback(r *http.Request) (string, error) {
 
 	// the authorization server's returned token
 	logrus.Println("Raw token data:", oauth2Token)
+	fmt.Printf("oauth2Token.TokenType: %v\n", oauth2Token.TokenType)
 	return oauth2Token.AccessToken, nil
 }
 
