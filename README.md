@@ -34,3 +34,9 @@ Once the documentation has been generated the API via the swagger description, w
 go run swagger_gen/cmd/my-travel-notebook-server/main.go --port 55600
 ```
 
+If you have nodemon installed, you can use it to live reload
+```sh
+nodemon --exec go run swagger_gen/cmd/my-travel-notebook-server/main.go --port 55600 --signal SIGTERM
+```
+
+

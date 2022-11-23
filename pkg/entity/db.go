@@ -26,7 +26,6 @@ func connectDB() (db *gorm.DB, err error) {
 	err = retry.Do(
 		func() error {
 			db, err = gorm.Open(config.Config.DBDriver, config.Config.DBConnectionStr)
-			// db, err = gorm.Open("postgres", "postgres://user:password@host:5432/flagr?sslmode=disable")
 			return err
 		},
 		retry.Attempts(config.Config.DBConnectionRetryAttempts),

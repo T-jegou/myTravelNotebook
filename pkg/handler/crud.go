@@ -1,10 +1,9 @@
 package handler
 
 import (
-	"fmt"
-
 	"github.com/T-jegou/myTravelNotebook/pkg/entity"
 	"github.com/T-jegou/myTravelNotebook/pkg/mapper"
+	"github.com/T-jegou/myTravelNotebook/pkg/util"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/models"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/authentication"
 	"github.com/T-jegou/myTravelNotebook/swagger_gen/restapi/operations/health"
@@ -22,10 +21,10 @@ type CRUD interface {
 	GetAuthCallback(authentication.GetAuthCallbackParams) middleware.Responder
 
 	// travels
-	AddTravel(travel.AddTravelParams, *models.Principal) middleware.Responder
 	GetTravels(travel.GetTravelsParams, *models.Principal) middleware.Responder
 
 	// travel
+	AddTravel(travel.AddTravelParams, *models.Principal) middleware.Responder
 	GetTravel(travel.GetTravelByIDParams, *models.Principal) middleware.Responder
 	DeleteTravel(travel.DeleteTravelByIDParams, *models.Principal) middleware.Responder
 	UpdateTravel(travel.UpdateTravelByIDParams, *models.Principal) middleware.Responder
@@ -84,7 +83,12 @@ func (c *crud) GetTravel(params travel.GetTravelByIDParams, principal *models.Pr
 }
 
 func (c *crud) DeleteTravel(params travel.DeleteTravelByIDParams, principal *models.Principal) middleware.Responder {
-	return nil
+
+	if err := entity.GetDB().Unscoped().Delete(&entity.Travel{}, params.TravelID).Error; err != nil {
+		return travel.NewDeleteTravelByIDDefault(500).WithPayload(ErrorMessage("%s", err))
+	}
+
+	return travel.NewDeleteTravelByIDOK()
 }
 
 func (c *crud) UpdateTravel(params travel.UpdateTravelByIDParams, principal *models.Principal) middleware.Responder {
@@ -98,13 +102,31 @@ func (c *crud) GetTravels(params travel.GetTravelsParams, principal *models.Prin
 
 func (c *crud) AddTravel(params travel.AddTravelParams, principal *models.Principal) middleware.Responder {
 	println("Add travel")
-	dbInstance := entity.GetDB()
-	travel := entity.Travel{NameTravel: "Escapade solitaire A Cracovie", Country: "Pologne", Description: "Blah blah blah"}
+	t := &entity.Travel{}
 
-	result := dbInstance.Create(&travel)
-	fmt.Print(result.Error, travel.ID)
+	if params.Body != nil {
+		t.NameTravel = util.SafeString(params.Body.Name)
+		t.Description = util.SafeString(params.Body.Description)
+		t.Country = util.SafeString(params.Body.Country)
+	}
 
-	return nil
+	tx := entity.GetDB().Begin()
+
+	if err := tx.Create(t).Error; err != nil {
+		tx.Rollback()
+		return travel.NewAddTravelDefault(500).WithPayload(
+			ErrorMessage("cannot create Travel. %s", err))
+	}
+
+	err := tx.Commit().Error
+	if err != nil {
+		tx.Rollback()
+		return travel.NewAddTravelDefault(500).WithPayload(ErrorMessage("%s", err))
+	}
+
+	resp := travel.NewAddTravelOK()
+
+	return resp
 }
 
 // Health
